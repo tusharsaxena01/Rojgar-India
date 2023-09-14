@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Sub_Message_Login">We will send you an One-Time-Password to the given number.</string>
+    <string name="enter_your_phone_number">Enter Your Phone Number</string>
+    <string name="x">xxxxxxxxxx</string>
+    <string name="resend">Resend</string>
+</resources>

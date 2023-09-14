@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bharat Plus</string>
+    <string name="Sub_Message_Login">We will send you an One-Time-Password to the given number.</string>
+    <string name="enter_your_phone_number">Enter Your Phone Number</string>
+    <string name="x">xxxxxxxxxx</string>
+    <string name="resend"><u>Resend</u></string>
+</resources>
