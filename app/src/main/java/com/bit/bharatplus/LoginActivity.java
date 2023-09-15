@@ -3,8 +3,13 @@ package com.bit.bharatplus;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bit.bharatplus.databinding.ActivityLoginBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
@@ -32,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         setContentView(activityLoginBinding.getRoot());
 
-
+        setInProgress(false);
 
         // move the focus to edittext when clicked on ll
         activityLoginBinding.llMobileNo.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
                 activityLoginBinding.etMobile.requestFocus();
             }
         });
+
+        // change focus to button
+        changeFocus();
 
         // when clicked on get otp btn
         activityLoginBinding.btnGetOTP.setOnClickListener(new View.OnClickListener() {
@@ -63,8 +71,57 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void changeFocus() {
+        activityLoginBinding.etMobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count == 10){
+                    closeKeyboard();
+                    activityLoginBinding.btnGetOTP.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() == 10){
+                    closeKeyboard();
+                    activityLoginBinding.btnGetOTP.requestFocus();
+                }
+            }
+        });
+    }
+
+
+    private void closeKeyboard()
+    {
+        // this will give us the view
+        // which is currently focus
+        // in this layout
+        View view = this.getCurrentFocus();
+
+        // if nothing is currently
+        // focus then this will protect
+        // the app from crash
+        if (view != null) {
+
+            // now assign the system
+            // service to InputMethodManager
+            InputMethodManager manager
+                    = (InputMethodManager)
+                    getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+            manager
+                    .hideSoftInputFromWindow(
+                            view.getWindowToken(), 0);
+        }
+    }
+
     private void sendOTP(String phoneNumber, boolean isResend) {
-        activityLoginBinding.pbLoading.setVisibility(View.VISIBLE);
 
         setInProgress(true);
         PhoneAuthOptions.Builder builder =
@@ -75,14 +132,12 @@ public class LoginActivity extends AppCompatActivity {
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                signIn(phoneAuthCredential);
-                                setInProgress(false);
+                                signIn(phoneNumber,phoneAuthCredential);
                             }
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 AndroidUtils.showToast(getApplicationContext(), "Verification Failed");
-                                setInProgress(false);
                             }
 
                             @Override
@@ -91,7 +146,10 @@ public class LoginActivity extends AppCompatActivity {
                                 verificationCode = s;
                                 resendingToken = forceResendingToken;
                                 AndroidUtils.showToast(getApplicationContext(), "OTP Send Successfully");
-                                setInProgress(false);
+                                Intent verifyOTPIntent = new Intent(getApplicationContext(), VerifyOTP.class);
+                                verifyOTPIntent.putExtra("phone", phoneNumber);
+                                verifyOTPIntent.putExtra("OTP", verificationCode);
+                                startActivity(verifyOTPIntent);
                             }
                         });
 
@@ -105,19 +163,25 @@ public class LoginActivity extends AppCompatActivity {
             );
         }
 
-        activityLoginBinding.pbLoading.setVisibility(View.GONE);
     }
 
-    private void signIn(PhoneAuthCredential phoneAuthCredential) {
+    private void signIn(String phoneNumber, PhoneAuthCredential phoneAuthCredential) {
         //login and go to next activity
-
+        Intent verifyOTPIntent = new Intent(getApplicationContext(), VerifyOTP.class);
+        verifyOTPIntent.putExtra("phone", phoneNumber);
+        verifyOTPIntent.putExtra("OTP", verificationCode);
+        startActivity(verifyOTPIntent);
     }
 
     private void setInProgress(boolean inProgress) {
         if(inProgress){
+            activityLoginBinding.btnGetOTP.setText("");
+            activityLoginBinding.btnGetOTP.setEnabled(false);
             activityLoginBinding.pbLoading.setVisibility(View.VISIBLE);
         }else{
             activityLoginBinding.pbLoading.setVisibility(View.GONE);
+            activityLoginBinding.btnGetOTP.setText("Get OTP");
+            activityLoginBinding.btnGetOTP.setEnabled(true);
         }
     }
 
