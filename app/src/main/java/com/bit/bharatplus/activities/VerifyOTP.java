@@ -213,7 +213,8 @@ public class VerifyOTP extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (!s.toString().trim().isEmpty()) {
-                        otps.get(finalI + 1).requestFocus();
+                        if(finalI != otps.size()-1)
+                            otps.get(finalI + 1).requestFocus();
                     }else{
                         if(finalI != 0)
                             otps.get(finalI - 1).requestFocus();
