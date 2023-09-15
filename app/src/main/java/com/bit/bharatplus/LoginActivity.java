@@ -133,10 +133,12 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                                 signIn(phoneNumber,phoneAuthCredential);
+                                setInProgress(false);
                             }
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
+                                setInProgress(false);
                                 AndroidUtils.showToast(getApplicationContext(), "Verification Failed");
                             }
 

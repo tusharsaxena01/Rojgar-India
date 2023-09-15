@@ -140,7 +140,7 @@ public class VerifyOTP extends AppCompatActivity {
         mDatabase.getReference()
                 .child("Registered Numbers")
                 .child(uuid)
-                .setValue("");
+                .setValue(phoneNumber);
 
     }
 
