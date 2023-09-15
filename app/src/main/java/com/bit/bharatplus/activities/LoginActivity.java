@@ -1,4 +1,4 @@
-package com.bit.bharatplus;
+package com.bit.bharatplus.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +19,6 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {

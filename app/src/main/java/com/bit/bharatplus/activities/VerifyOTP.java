@@ -1,17 +1,16 @@
-package com.bit.bharatplus;
+package com.bit.bharatplus.activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bit.bharatplus.databinding.ActivityVerifyOtpBinding;
@@ -26,12 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +38,7 @@ public class VerifyOTP extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     SharedPreferences sp;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    ArrayList<EditText> otps = new ArrayList<EditText>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +48,7 @@ public class VerifyOTP extends AppCompatActivity {
         sp = getSharedPreferences("data", 0);
         setContentView(binding.getRoot());
 
+        addEditTextToArray(binding);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
@@ -62,7 +60,7 @@ public class VerifyOTP extends AppCompatActivity {
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 setInProgress(false);
-                Log.w("Phone Authentication", "onVerificationFailed: " + e.getMessage().toString());
+                Log.w("Phone Authentication", "onVerificationFailed: " + e.getMessage());
             }
 
             @Override
@@ -135,8 +133,21 @@ public class VerifyOTP extends AppCompatActivity {
 
     }
 
+    private void addEditTextToArray(ActivityVerifyOtpBinding binding) {
+        otps.add(binding.etOTP1);
+        otps.add(binding.etOTP2);
+        otps.add(binding.etOTP3);
+        otps.add(binding.etOTP4);
+        otps.add(binding.etOTP5);
+        otps.add(binding.etOTP6);
+//        for(int i=0;i< otps.size();i++) {
+//            Log.e("OTP", otps.get(i).getText().toString());
+//        }
+    }
+
     private void saveUser(String phoneNumber) {
         String uuid = mAuth.getUid();
+        assert uuid != null;
         mDatabase.getReference()
                 .child("Registered Numbers")
                 .child(uuid)
@@ -191,125 +202,32 @@ public class VerifyOTP extends AppCompatActivity {
     }
 
     private void otpDigitMove() {
-        binding.etOTP1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        for(int i=0;i< otps.size();i++){
+            int finalI = i;
+            otps.get(i).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().trim().isEmpty()) {
-                    binding.etOTP2.requestFocus();
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        binding.etOTP2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().trim().isEmpty()) {
-                    binding.etOTP3.requestFocus();
-                }else{
-                    binding.etOTP1.requestFocus();
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (!s.toString().trim().isEmpty()) {
+                        otps.get(finalI + 1).requestFocus();
+                    }else{
+                        if(finalI != 0)
+                            otps.get(finalI - 1).requestFocus();
+                    }
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            }
-        });
-        binding.etOTP3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().trim().isEmpty()) {
-                    binding.etOTP4.requestFocus();
-                }else{
-                    binding.etOTP2.requestFocus();
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        binding.etOTP4.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().trim().isEmpty()) {
-                    binding.etOTP5.requestFocus();
-                }else{
-                    binding.etOTP3.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        binding.etOTP5.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().trim().isEmpty()) {
-                    binding.etOTP6.requestFocus();
-                }else{
-                    binding.etOTP4.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        binding.etOTP6.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.btnVerifyOTP.requestFocus();
-                if(!s.toString().trim().isEmpty()){
-                    binding.btnVerifyOTP.requestFocus();
-                }else{
-                    binding.etOTP5.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+            });
+        }
     }
+
+
+
 }

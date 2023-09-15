@@ -1,4 +1,4 @@
-package com.bit.bharatplus;
+package com.bit.bharatplus.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
-import com.bit.bharatplus.databinding.ActivityLoginBinding;
+import com.bit.bharatplus.activities.LoginActivity;
 import com.bit.bharatplus.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
