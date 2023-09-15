@@ -215,6 +215,8 @@ public class VerifyOTP extends AppCompatActivity {
                     if (!s.toString().trim().isEmpty()) {
                         if(finalI != otps.size()-1)
                             otps.get(finalI + 1).requestFocus();
+                        else
+                            binding.btnVerifyOTP.requestFocus();
                     }else{
                         if(finalI != 0)
                             otps.get(finalI - 1).requestFocus();
