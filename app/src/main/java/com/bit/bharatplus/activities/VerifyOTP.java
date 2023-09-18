@@ -3,6 +3,7 @@ package com.bit.bharatplus.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -140,9 +142,6 @@ public class VerifyOTP extends AppCompatActivity {
         otps.add(binding.etOTP4);
         otps.add(binding.etOTP5);
         otps.add(binding.etOTP6);
-//        for(int i=0;i< otps.size();i++) {
-//            Log.e("OTP", otps.get(i).getText().toString());
-//        }
     }
 
     private void saveUser(String phoneNumber) {
@@ -215,8 +214,10 @@ public class VerifyOTP extends AppCompatActivity {
                     if (!s.toString().trim().isEmpty()) {
                         if(finalI != otps.size()-1)
                             otps.get(finalI + 1).requestFocus();
-                        else
+                        else {
                             binding.btnVerifyOTP.requestFocus();
+                            closeKeyboard();
+                        }
                     }else{
                         if(finalI != 0)
                             otps.get(finalI - 1).requestFocus();
@@ -228,6 +229,30 @@ public class VerifyOTP extends AppCompatActivity {
 
                 }
             });
+        }
+    }
+
+    private void closeKeyboard()
+    {
+        // this will give us the view
+        // which is currently focus
+        // in this layout
+        View view = this.getCurrentFocus();
+
+        // if nothing is currently
+        // focus then this will protect
+        // the app from crash
+        if (view != null) {
+
+            // now assign the system
+            // service to InputMethodManager
+            InputMethodManager manager
+                    = (InputMethodManager)
+                    getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+            manager
+                    .hideSoftInputFromWindow(
+                            view.getWindowToken(), 0);
         }
     }
 
