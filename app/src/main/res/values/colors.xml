@@ -9,4 +9,5 @@
     <color name="white">#F7F7F7F7</color>
     <color name="yellow">#FFC107</color>
     <color name="link">@color/purple_700</color>
+    <color name="red">#FF3654</color>
 </resources>
