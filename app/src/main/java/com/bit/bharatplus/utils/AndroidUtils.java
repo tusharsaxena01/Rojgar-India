@@ -24,10 +24,27 @@ public class AndroidUtils {
         DialogPopupBinding binding = DialogPopupBinding.inflate(LayoutInflater.from(context));
         int[] backgrounds = {
                 drawable.rounded_background_success,
-                drawable.rounded_background_error
+                drawable.rounded_background_error,
+                drawable.rounded_background_warning
+        };
+        int[] icons = {
+                drawable.baseline_error_outline_24,
+                drawable.baseline_check_circle_outline_24,
+                drawable.baseline_warning_amber_24
         };
 
-
+        switch(dialogType){
+            case "Success":
+                binding.clMain.setBackgroundResource(backgrounds[0]);
+                binding.ivDialogIcon.setImageResource(icons[0]);
+                binding.ivDialogDesc.setText(message);
+                break;
+            case "Error":
+                binding.clMain.setBackgroundResource(backgrounds[1]);
+                binding.ivDialogIcon.setImageResource(icons[1]);
+                binding.ivDialogDesc.setText(message);
+                break;
+        }
 
     }
 }
