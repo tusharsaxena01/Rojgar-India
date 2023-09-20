@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.bit.bharatplus.R;
 import com.bit.bharatplus.databinding.ActivityLoginBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.firebase.FirebaseException;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_BharatPlus); // Set the app theme before super.onCreate()
         super.onCreate(savedInstanceState);
         activityLoginBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
@@ -120,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void sendOTP(String phoneNumber, boolean isResend) {
+    public void sendOTP(String phoneNumber, boolean isResend) {
 
         setInProgress(true);
         PhoneAuthOptions.Builder builder =
@@ -138,7 +140,9 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 setInProgress(false);
-                                AndroidUtils.showToast(getApplicationContext(), "Verification Failed");
+                                AndroidUtils.showToast(getApplicationContext(), "Verification Failed"+" "+e.getMessage());
+//                                Dialogs.showErrorDialog(LoginActivity.this,e.getMessage());
+                                AndroidUtils.showDialog(LoginActivity.this, "Error", e.getMessage());
                             }
 
                             @Override

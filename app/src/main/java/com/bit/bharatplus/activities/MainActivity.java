@@ -1,15 +1,16 @@
 package com.bit.bharatplus.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.service.autofill.UserData;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.bit.bharatplus.activities.LoginActivity;
 import com.bit.bharatplus.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +33,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent loginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(loginActivityIntent);
                 finishAffinity();
+            }
+        });
+
+        binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Todo: update fragment accordingly
+
+                return false;
             }
         });
 
