@@ -1,17 +1,20 @@
 package com.bit.bharatplus.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.bit.bharatplus.R;
 import com.bit.bharatplus.databinding.ActivityMainBinding;
+import com.bit.bharatplus.fragments.HomeFragment;
+import com.bit.bharatplus.fragments.ProfileFragment;
+import com.bit.bharatplus.fragments.ShopFragment;
+import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,23 +28,42 @@ public class MainActivity extends AppCompatActivity {
         sp = getSharedPreferences("data", 0);
         String phoneNumber = sp.getString("phone", "9876543210");
 
-        binding.tvCurrentUser.setText(phoneNumber);
-        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent loginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(loginActivityIntent);
-                finishAffinity();
-            }
-        });
+//        binding.tvCurrentUser.setText(phoneNumber);
+//        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//                Intent loginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+//                startActivity(loginActivityIntent);
+//                finishAffinity();
+//            }
+//        });
 
         binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // Todo: update fragment accordingly
+                Fragment currentFragment = null;
+                if(item.getItemId() == R.id.bn_home){
+                    currentFragment = new HomeFragment();
+                } else if (item.getItemId() == R.id.bn_shop) {
+                    currentFragment = new ShopFragment();
+                } else if (item.getItemId() == R.id.bn_profile) {
+                    currentFragment = new ProfileFragment();
+                }
+                if(currentFragment != null) {
 
-                return false;
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragContainer, currentFragment)
+                            .addToBackStack(null)
+                            .commit();
+                    return true;
+                }else{
+                    AndroidUtils.showDialog(getApplicationContext(), "Warning", "Unknown Error Occurred");
+                    return false;
+                }
+
             }
         });
 
