@@ -7,27 +7,36 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="@drawable/card_background">
+        <LinearLayout
+            android:id="@+id/llDialogIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_error"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvDialogHeader">
         <ImageView
             android:id="@+id/ivDialogIcon"
             android:layout_width="156dp"
             android:layout_height="156dp"
             android:src="@drawable/baseline_error_outline_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tvDialogHeader"
-            />
+            android:layout_gravity="center"
+            app:tint="@color/white" />
+        </LinearLayout>
         <TextView
             android:id="@+id/tvDialogHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Error Occurred"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivDialogIcon"
+            app:layout_constraintTop_toBottomOf="@id/llDialogIcon"
             app:layout_constraintBottom_toTopOf="@id/ivDialogDesc"
             />
         <TextView
@@ -35,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Error Message Here"
-
             app:layout_constraintTop_toBottomOf="@id/tvDialogHeader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,6 +58,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_background_error"
+            android:layout_margin="10dp"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
