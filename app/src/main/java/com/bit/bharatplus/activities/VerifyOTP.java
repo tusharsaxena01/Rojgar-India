@@ -103,9 +103,9 @@ public class VerifyOTP extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         setInProgress(false);
                                         if(task.isSuccessful()){
-                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                            Intent intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            saveUser(getIntent().getStringExtra("phone"));
+//                                            saveUser(getIntent().getStringExtra("phone"));
                                             sp.edit()
                                                             .putString("phone", getIntent().getStringExtra("phone"))
                                                                     .apply();
@@ -176,17 +176,6 @@ public class VerifyOTP extends AppCompatActivity {
         otps.add(binding.etOTP4);
         otps.add(binding.etOTP5);
         otps.add(binding.etOTP6);
-    }
-
-    private void saveUser(String phoneNumber) {
-        String uuid = mAuth.getUid();
-        assert uuid != null;
-        mDatabase.getReference()
-                .child("Registered Numbers")
-                .child(uuid)
-                .child(phoneNumber)
-                .setValue("");
-
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
