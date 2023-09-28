@@ -53,29 +53,12 @@ public class AndroidUtils {
         switch (dialogType){
             case "Success":
                 index = 0;
-//                binding.ivDialogIcon.setImageResource(backgrounds[0]);
-//                binding.llMain.setBackgroundResource(outlines[0]);
-//                binding.ivDialogIcon.setBackgroundResource(backgrounds[0]);
-//                binding.llDialogIcon.setBackgroundResource(backgrounds[0]);
-//                binding.btnOK.setBackgroundResource(backgrounds[0]);
-//                binding.ivDialogIcon.setImageResource(icons[0]);
                 break;
             case "Error":
                 index = 1;
-
-//                binding.llMain.setBackgroundResource(outlines[1]);
-//                binding.ivDialogIcon.setBackgroundResource(backgrounds[1]);
-//                binding.llDialogIcon.setBackgroundResource(backgrounds[1]);
-//                binding.btnOK.setBackgroundResource(backgrounds[1]);
-//                binding.ivDialogIcon.setImageResource(icons[1]);
                 break;
             case "Warning":
                 index = 2;
-//                binding.llMain.setBackgroundResource(outlines[2]);
-//                binding.ivDialogIcon.setBackgroundResource(backgrounds[2]);
-//                binding.llDialogIcon.setBackgroundResource(backgrounds[2]);
-//                binding.btnOK.setBackgroundResource(backgrounds[2]);
-//                binding.ivDialogIcon.setImageResource(icons[2]);
                 break;
         }
 
