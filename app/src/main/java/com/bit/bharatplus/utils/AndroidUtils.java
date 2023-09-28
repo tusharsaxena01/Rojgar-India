@@ -25,7 +25,7 @@ public class AndroidUtils {
         int[] backgrounds = {
                 drawable.rounded_background_success,
                 drawable.rounded_background_error,
-                drawable.baseline_warning_amber_24
+                drawable.rounded_background_warning
         };
 
         int[] icons = {
@@ -46,14 +46,17 @@ public class AndroidUtils {
         switch (dialogType){
             case "Success":
 //                binding.ivDialogIcon.setImageResource(backgrounds[0]);
+                binding.llDialogIcon.setBackgroundResource(backgrounds[0]);
                 binding.btnOK.setBackgroundResource(backgrounds[0]);
                 binding.ivDialogIcon.setImageResource(icons[0]);
                 break;
             case "Error":
+                binding.llDialogIcon.setBackgroundResource(backgrounds[1]);
                 binding.btnOK.setBackgroundResource(backgrounds[1]);
                 binding.ivDialogIcon.setImageResource(icons[1]);
                 break;
             case "Warning":
+                binding.llDialogIcon.setBackgroundResource(backgrounds[2]);
                 binding.btnOK.setBackgroundResource(backgrounds[2]);
                 binding.ivDialogIcon.setImageResource(icons[2]);
                 break;

@@ -53,6 +53,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     String[] genders = {"Male", "Female"};
     public static final int SELECT_PICTURE = 200;
     String currentImageURL;
+    boolean uploadedImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +134,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 DialogConfirmBinding confirmDialogBinding = DialogConfirmBinding.inflate(LayoutInflater.from(CompleteProfileActivity.this));
                 builder.setView(confirmDialogBinding.getRoot());
 
-                String message = "Do you want to Exit?";
+                String message = "Do you want to Logout?";
                 confirmDialogBinding.tvMessage.setText(message);
                 AlertDialog dialog = builder.create();
                 dialog.getWindow().setBackgroundDrawableResource(transparent);
@@ -166,9 +167,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     saveUser(mAuth.getUid());
                     startActivity(new Intent(CompleteProfileActivity.this, MainActivity.class));
                     finishActivity(0);
-                }else{
-                    binding.etName.setError("Invalid Details");
-                    binding.etName.requestFocus();
                 }
             }
         });
@@ -177,7 +175,17 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
 
     private boolean validate() {
-        return binding.etName.getText().toString().length() > 0;
+        if(binding.etName.getText().toString().length() == 0){
+            binding.etName.setError("Name is Required");
+            binding.etName.requestFocus();
+            return false;
+        }
+        if(!uploadedImage){
+            AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "Profile Picture is required");
+            binding.ivProfile.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     private void openImageChooser() {
@@ -247,6 +255,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     .centerCrop()
                     .into(binding.ivProfile);
             currentImageURL = url;
+            uploadedImage = true;
         }
 
 
