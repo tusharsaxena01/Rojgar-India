@@ -42,6 +42,7 @@ public class VerifyOTP extends AppCompatActivity {
     SharedPreferences sp;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     ArrayList<EditText> otps = new ArrayList<EditText>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,6 @@ public class VerifyOTP extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.tvResendOTP.setEnabled(false); // Disable the button initially
-
 
 
         addEditTextToArray(binding);
@@ -68,6 +68,7 @@ public class VerifyOTP extends AppCompatActivity {
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 setInProgress(false);
                 Log.w("Phone Authentication", "onVerificationFailed: " + e.getMessage());
+                AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", e.getMessage());
             }
 
             @Override
@@ -87,14 +88,14 @@ public class VerifyOTP extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setInProgress(true);
-                if(validate()){
+                if (validate()) {
                     String enteredOTP = binding.etOTP1.getText().toString() +
                             binding.etOTP2.getText().toString() +
                             binding.etOTP3.getText().toString() +
                             binding.etOTP4.getText().toString() +
                             binding.etOTP5.getText().toString() +
                             binding.etOTP6.getText().toString();
-                    if(backEndOTP != null){
+                    if (backEndOTP != null) {
                         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(
                                 backEndOTP, enteredOTP
                         );
@@ -103,22 +104,22 @@ public class VerifyOTP extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         setInProgress(false);
-                                        if(task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             Intent intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                            saveUser(getIntent().getStringExtra("phone"));
                                             sp.edit()
-                                                            .putString("phone", getIntent().getStringExtra("phone"))
-                                                                    .apply();
+                                                    .putString("phone", getIntent().getStringExtra("phone"))
+                                                    .apply();
                                             startActivity(intent);
-                                        }else{
+                                        } else {
                                             AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
                                         }
                                     }
                                 })
                         ;
-                    }else{
-                        AndroidUtils.showToast(getApplicationContext(),"Unable to Fetch OTP from server");
+                    } else {
+                        AndroidUtils.showToast(getApplicationContext(), "Unable to Fetch OTP from server");
                     }
                 }
                 setInProgress(false);
@@ -134,7 +135,7 @@ public class VerifyOTP extends AppCompatActivity {
                 binding.tvResendOTP.setEnabled(true); // Enable the button
             }
         };
-        handler.postDelayed(enableResendButtonRunnable, 30*1000);
+        handler.postDelayed(enableResendButtonRunnable, 30 * 1000);
         binding.tvResendOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,9 +196,7 @@ public class VerifyOTP extends AppCompatActivity {
                             Log.w("Phone Authentication", "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
-                                // Todo: show warning dialog
-//                                AndroidUtils.showDialog(getApplicationContext(), "Warning",task.getException().getMessage());
-
+                                AndroidUtils.showAlertDialog(VerifyOTP.this, "Warning", task.getException().getMessage());
                             }
                         }
                     }
@@ -205,11 +204,10 @@ public class VerifyOTP extends AppCompatActivity {
     }
 
     private void setInProgress(boolean inProgress) {
-        if(inProgress){
+        if (inProgress) {
             binding.pbLoading.setVisibility(View.VISIBLE);
             binding.btnVerifyOTP.setVisibility(View.GONE);
-        }else{
-
+        } else {
             binding.pbLoading.setVisibility(View.GONE);
             binding.btnVerifyOTP.setVisibility(View.VISIBLE);
         }
@@ -228,7 +226,7 @@ public class VerifyOTP extends AppCompatActivity {
     }
 
     private void otpDigitMove() {
-        for(int i=0;i< otps.size();i++){
+        for (int i = 0; i < otps.size(); i++) {
             int finalI = i;
             otps.get(i).addTextChangedListener(new TextWatcher() {
                 @Override
@@ -239,14 +237,14 @@ public class VerifyOTP extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (!s.toString().trim().isEmpty()) {
-                        if(finalI != otps.size()-1)
+                        if (finalI != otps.size() - 1)
                             otps.get(finalI + 1).requestFocus();
                         else {
                             binding.btnVerifyOTP.requestFocus();
                             closeKeyboard();
                         }
-                    }else{
-                        if(finalI != 0)
+                    } else {
+                        if (finalI != 0)
                             otps.get(finalI - 1).requestFocus();
                     }
                 }
@@ -259,8 +257,7 @@ public class VerifyOTP extends AppCompatActivity {
         }
     }
 
-    private void closeKeyboard()
-    {
+    private void closeKeyboard() {
         // this will give us the view
         // which is currently focus
         // in this layout
@@ -282,8 +279,4 @@ public class VerifyOTP extends AppCompatActivity {
                             view.getWindowToken(), 0);
         }
     }
-
-
-
-
 }

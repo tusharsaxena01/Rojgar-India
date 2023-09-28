@@ -250,6 +250,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
+                        AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "Upload Failed");
                         AndroidUtils.showToast(getApplicationContext(), "Upload failed");
                     }
                 });

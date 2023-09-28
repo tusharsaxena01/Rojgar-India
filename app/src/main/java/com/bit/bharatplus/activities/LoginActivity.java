@@ -116,9 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     = (InputMethodManager)
                     getSystemService(
                             Context.INPUT_METHOD_SERVICE);
-            manager
-                    .hideSoftInputFromWindow(
-                            view.getWindowToken(), 0);
+            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -141,7 +139,6 @@ public class LoginActivity extends AppCompatActivity {
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 setInProgress(false);
                                 AndroidUtils.showToast(getApplicationContext(), "Verification Failed"+" "+e.getMessage());
-//                                Dialogs.showErrorDialog(LoginActivity.this,e.getMessage());
                                 AndroidUtils.showAlertDialog(LoginActivity.this, "Error", e.getMessage());
                             }
 
