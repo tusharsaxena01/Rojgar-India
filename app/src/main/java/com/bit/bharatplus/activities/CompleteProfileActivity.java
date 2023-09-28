@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bit.bharatplus.R;
-import static com.bit.bharatplus.R.style;
-import com.bit.bharatplus.User;
+import com.bit.bharatplus.classes.User;
 import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.utils.AndroidUtils;

@@ -1,15 +1,13 @@
 package com.bit.bharatplus.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bit.bharatplus.R;
-import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {

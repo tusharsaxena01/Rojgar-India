@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bit.bharatplus.activities.LoginActivity;
-import com.bit.bharatplus.databinding.FragmentProfileBinding;
 import com.bit.bharatplus.databinding.FragmentShopBinding;
 import com.google.firebase.auth.FirebaseAuth;
 

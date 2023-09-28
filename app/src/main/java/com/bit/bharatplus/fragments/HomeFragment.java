@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bit.bharatplus.activities.LoginActivity;
 import com.bit.bharatplus.databinding.FragmentHomeBinding;
-import com.bit.bharatplus.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;

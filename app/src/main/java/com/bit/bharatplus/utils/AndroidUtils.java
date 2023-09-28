@@ -5,7 +5,6 @@ import static com.bit.bharatplus.R.drawable;
 import static com.bit.bharatplus.R.style;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;

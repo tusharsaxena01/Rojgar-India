@@ -1,4 +1,4 @@
-package com.bit.bharatplus;
+package com.bit.bharatplus.classes;
 
 import java.net.URI;
 
