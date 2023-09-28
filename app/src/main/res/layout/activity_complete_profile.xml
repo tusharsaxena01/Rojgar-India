@@ -177,6 +177,8 @@
         android:text="Submit"
         android:textColor="@color/white"
         android:textStyle="bold"
+        android:enabled="false"
+        android:allowClickWhenDisabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

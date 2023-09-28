@@ -1,18 +1,18 @@
 package com.bit.bharatplus.utils;
 
 import static android.R.color.transparent;
-
-import static com.bit.bharatplus.R.*;
+import static com.bit.bharatplus.R.drawable;
+import static com.bit.bharatplus.R.style;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.bit.bharatplus.databinding.DialogConfirmBinding;
-import com.bit.bharatplus.databinding.DialogPopupBinding;
+import com.bit.bharatplus.databinding.DialogAlertBinding;
 
 public class AndroidUtils {
     public static void showToast(Context context, String message){
@@ -31,36 +31,59 @@ public class AndroidUtils {
         int[] icons = {
                 drawable.baseline_check_circle_outline_24,
                 drawable.baseline_error_outline_24,
-                drawable.baseline_warning_amber_24
+                drawable.baseline_crisis_alert_24
+        };
+
+        int[] outlines = {
+                drawable.outline_success,
+                drawable.outline_error,
+                drawable.outline_warning
         };
 
         context.setTheme(style.Theme_BharatPlus);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        DialogPopupBinding binding = DialogPopupBinding.inflate(LayoutInflater.from(context));
+        DialogAlertBinding binding = DialogAlertBinding.inflate(LayoutInflater.from(context));
         builder.setView(binding.getRoot());
 
         // Set the header and message in the dialog
         binding.tvDialogHeader.setText(dialogType);
         binding.tvDialogDesc.setText(message);
 
+        int index=1;
         switch (dialogType){
             case "Success":
+                index = 0;
 //                binding.ivDialogIcon.setImageResource(backgrounds[0]);
-                binding.llDialogIcon.setBackgroundResource(backgrounds[0]);
-                binding.btnOK.setBackgroundResource(backgrounds[0]);
-                binding.ivDialogIcon.setImageResource(icons[0]);
+//                binding.llMain.setBackgroundResource(outlines[0]);
+//                binding.ivDialogIcon.setBackgroundResource(backgrounds[0]);
+//                binding.llDialogIcon.setBackgroundResource(backgrounds[0]);
+//                binding.btnOK.setBackgroundResource(backgrounds[0]);
+//                binding.ivDialogIcon.setImageResource(icons[0]);
                 break;
             case "Error":
-                binding.llDialogIcon.setBackgroundResource(backgrounds[1]);
-                binding.btnOK.setBackgroundResource(backgrounds[1]);
-                binding.ivDialogIcon.setImageResource(icons[1]);
+                index = 1;
+
+//                binding.llMain.setBackgroundResource(outlines[1]);
+//                binding.ivDialogIcon.setBackgroundResource(backgrounds[1]);
+//                binding.llDialogIcon.setBackgroundResource(backgrounds[1]);
+//                binding.btnOK.setBackgroundResource(backgrounds[1]);
+//                binding.ivDialogIcon.setImageResource(icons[1]);
                 break;
             case "Warning":
-                binding.llDialogIcon.setBackgroundResource(backgrounds[2]);
-                binding.btnOK.setBackgroundResource(backgrounds[2]);
-                binding.ivDialogIcon.setImageResource(icons[2]);
+                index = 2;
+//                binding.llMain.setBackgroundResource(outlines[2]);
+//                binding.ivDialogIcon.setBackgroundResource(backgrounds[2]);
+//                binding.llDialogIcon.setBackgroundResource(backgrounds[2]);
+//                binding.btnOK.setBackgroundResource(backgrounds[2]);
+//                binding.ivDialogIcon.setImageResource(icons[2]);
                 break;
         }
+
+        binding.llMain.setBackgroundResource(outlines[index]);
+        binding.ivDialogIcon.setBackgroundResource(backgrounds[index]);
+        binding.llDialogIcon.setBackgroundResource(backgrounds[index]);
+        binding.btnOK.setBackgroundResource(backgrounds[index]);
+        binding.ivDialogIcon.setImageResource(icons[index]);
 
         AlertDialog dialog = builder.create();
 
@@ -73,6 +96,7 @@ public class AndroidUtils {
         });
 
 //        binding.clMain.setBackgroundResource(transparent);
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         dialog.getWindow().setBackgroundDrawableResource(transparent);
 
         dialog.show();

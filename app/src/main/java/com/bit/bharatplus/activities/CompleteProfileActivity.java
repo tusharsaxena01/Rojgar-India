@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bit.bharatplus.R;
+import static com.bit.bharatplus.R.style;
 import com.bit.bharatplus.User;
 import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
@@ -43,15 +45,14 @@ import java.util.List;
 
 
 public class CompleteProfileActivity extends AppCompatActivity {
+    public static final int SELECT_PICTURE = 200;
     FirebaseAuth mAuth;
     FirebaseDatabase db;
     StorageReference storageReference;
     SharedPreferences sp;
-
     ActivityCompleteProfileBinding binding;
     List<String> professions;
     String[] genders = {"Male", "Female"};
-    public static final int SELECT_PICTURE = 200;
     String currentImageURL;
     boolean uploadedImage = false;
 
@@ -163,16 +164,21 @@ public class CompleteProfileActivity extends AppCompatActivity {
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!binding.btnSubmit.isEnabled()){
+                    AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "All Fields Required");
+                    return;
+                }
                 if(validate()) {
                     saveUser(mAuth.getUid());
                     startActivity(new Intent(CompleteProfileActivity.this, MainActivity.class));
                     finishActivity(0);
+                }else{
+                    AndroidUtils.showToast(getApplicationContext(), "Try Again");
                 }
             }
         });
 
     }
-
 
     private boolean validate() {
         if(binding.etName.getText().toString().length() == 0){
@@ -209,7 +215,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
             if (requestCode == SELECT_PICTURE) {// Get the Uri of the selected file
                 Uri selectedImage = data.getData();
                 // Use the uri to display the image
-                binding.ivProfile.setImageURI(selectedImage);
+                setProgressForImage(true);
+//                binding.ivProfile.setImageURI(selectedImage);
                 // Use the uri to upload the image to firebase storage
                 uploadImage(selectedImage);
             }
@@ -218,7 +225,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     // Define a method to upload the image to firebase storage
     void uploadImage(Uri uri) {
         // Create a reference to 'images/profile.jpg'
-        String profileImageName = mAuth.getUid().toString()+"_profile.jpg";
+        String profileImageName = mAuth.getUid() +"_profile.jpg";
         StorageReference profileRef = storageReference.child("images/"+profileImageName);
         // Upload the file to firebase storage
         profileRef.putFile(uri)
@@ -242,6 +249,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     }
                 });
     }
+
     // Define a method to update the profile image using glide framework
     void updateProfileImage(String url) {
         // Load the image from the url into the image view using glide
@@ -256,23 +264,27 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     .into(binding.ivProfile);
             currentImageURL = url;
             uploadedImage = true;
-        }
+            binding.btnSubmit.setEnabled(true);
 
+            // setting text color to white
+            int whiteColor = context.getResources().getColor(R.color.white, getTheme());
+            binding.btnSubmit.setTextColor(whiteColor);
+        }
 
         setProgressForImage(false);
     }
+
     public static boolean isValidContextForGlide(final Context context) {
         if (context == null) {
             return false;
         }
         if (context instanceof Activity) {
             final Activity activity = (Activity) context;
-            if (activity.isDestroyed() || activity.isFinishing()) {
-                return false;
-            }
+            return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;
     }
+
 
     private void setProgressForImage(boolean isProgress) {
         if(isProgress){
