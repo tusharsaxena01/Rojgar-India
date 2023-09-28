@@ -5,6 +5,7 @@ import static com.bit.bharatplus.R.drawable;
 import static com.bit.bharatplus.R.style;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,6 +54,7 @@ public class AndroidUtils {
         switch (dialogType){
             case "Success":
                 index = 0;
+                binding.btnOK.setVisibility(View.GONE);
                 break;
             case "Error":
                 index = 1;
@@ -78,13 +80,12 @@ public class AndroidUtils {
             }
         });
 
+
 //        binding.clMain.setBackgroundResource(transparent);
         dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         dialog.getWindow().setBackgroundDrawableResource(transparent);
 
         dialog.show();
-        
-
 
 
 

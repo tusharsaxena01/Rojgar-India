@@ -113,7 +113,8 @@ public class VerifyOTP extends AppCompatActivity {
                                                     .apply();
                                             startActivity(intent);
                                         } else {
-                                            AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
+//                                            AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
+                                            AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", Objects.requireNonNull(task.getException()).getMessage());
                                         }
                                     }
                                 })

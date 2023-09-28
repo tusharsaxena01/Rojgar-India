@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                                 super.onCodeSent(s, forceResendingToken);
                                 verificationCode = s;
                                 resendingToken = forceResendingToken;
-                                AndroidUtils.showToast(getApplicationContext(), "OTP Send Successfully");
+//                                AndroidUtils.showToast(getApplicationContext(), "OTP Send Successfully");
                                 Intent verifyOTPIntent = new Intent(getApplicationContext(), VerifyOTP.class);
                                 verifyOTPIntent.putExtra("phone", phoneNumber);
                                 verifyOTPIntent.putExtra("OTP", verificationCode);

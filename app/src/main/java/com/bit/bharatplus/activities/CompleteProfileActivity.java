@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
     String[] genders = {"Male", "Female"};
     String currentImageURL;
     boolean uploadedImage = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,10 +178,17 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 }
                 if(validate()) {
                     saveUser(mAuth.getUid());
-                    startActivity(new Intent(CompleteProfileActivity.this, MainActivity.class));
-                    finishActivity(0);
+                    sp.edit().putBoolean("profileCompleted", true).apply();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(CompleteProfileActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    },2000);
+
                 }else{
-                    AndroidUtils.showToast(getApplicationContext(), "Try Again");
+                    AndroidUtils.showToast(getApplicationContext(), "Complete all Fields");
                 }
             }
         });
@@ -319,9 +329,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful())
-                            sp.edit()
-                                    .putBoolean("profileCompleted", true)
-                                    .apply();
+                            AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Success", "User Created Successfully");
                         else {
                             AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", "Internet Error");
                             AndroidUtils.showToast(getApplicationContext(), "Check your Internet or Try Again Later");
