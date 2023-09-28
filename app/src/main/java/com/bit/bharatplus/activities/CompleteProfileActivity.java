@@ -1,21 +1,27 @@
 package com.bit.bharatplus.activities;
 
+import static android.R.color.transparent;
+
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bit.bharatplus.R;
 import com.bit.bharatplus.User;
 import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
+import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -96,7 +102,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                AndroidUtils.showDialog(getApplicationContext(), "Error", "Error Fetching Data from Server");
+                AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", "Error Fetching Data from Server");
             }
         });
 
@@ -119,12 +125,47 @@ public class CompleteProfileActivity extends AppCompatActivity {
             }
         });
 
+        // when clicked on close
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CompleteProfileActivity.this);
+                DialogConfirmBinding confirmDialogBinding = DialogConfirmBinding.inflate(LayoutInflater.from(CompleteProfileActivity.this));
+                builder.setView(confirmDialogBinding.getRoot());
+
+                String message = "Do you want to Exit?";
+                confirmDialogBinding.tvMessage.setText(message);
+                AlertDialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawableResource(transparent);
+
+                confirmDialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        mAuth.signOut();
+                        finish();
+                    }
+                });
+
+                confirmDialogBinding.btnNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
         // when clicked on submit
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(validate()) {
                     saveUser(mAuth.getUid());
+                    startActivity(new Intent(CompleteProfileActivity.this, MainActivity.class));
+                    finishActivity(0);
                 }else{
                     binding.etName.setError("Invalid Details");
                     binding.etName.requestFocus();
@@ -133,6 +174,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
         });
 
     }
+
 
     private boolean validate() {
         return binding.etName.getText().toString().length() > 0;
@@ -196,12 +238,31 @@ public class CompleteProfileActivity extends AppCompatActivity {
     void updateProfileImage(String url) {
         // Load the image from the url into the image view using glide
         setProgressForImage(true);
-        Glide.with(this)
-                .load(url)
-                .centerCrop()
-                .into(binding.ivProfile);
-        currentImageURL = url;
+        final Context  context = getApplication().getApplicationContext();
+
+        if (isValidContextForGlide(context)){
+            // Load image via Glide lib using context
+            Glide.with(this)
+                    .load(url)
+                    .centerCrop()
+                    .into(binding.ivProfile);
+            currentImageURL = url;
+        }
+
+
         setProgressForImage(false);
+    }
+    public static boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            if (activity.isDestroyed() || activity.isFinishing()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void setProgressForImage(boolean isProgress) {
@@ -235,7 +296,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                                     .putBoolean("profileCompleted", true)
                                     .apply();
                         else {
-                            AndroidUtils.showDialog(getApplicationContext(), "Error", "Internet Error");
+                            AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", "Internet Error");
                             AndroidUtils.showToast(getApplicationContext(), "Check your Internet or Try Again Later");
                         }
                     }

@@ -8,6 +8,14 @@
     android:padding="10dp"
     tools:context=".activities.CompleteProfileActivity">
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
     <TextView
         android:id="@+id/tvHeader"
         android:layout_width="wrap_content"

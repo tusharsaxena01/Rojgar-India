@@ -4,17 +4,14 @@ import static android.R.color.transparent;
 
 import static com.bit.bharatplus.R.*;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.bit.bharatplus.R;
+import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.databinding.DialogPopupBinding;
 
 public class AndroidUtils {
@@ -22,7 +19,8 @@ public class AndroidUtils {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
-    public static void showDialog(Context context, String dialogType, String message) {
+
+    public static void showAlertDialog(Context context, String dialogType, String message) {
 
         int[] backgrounds = {
                 drawable.rounded_background_success,

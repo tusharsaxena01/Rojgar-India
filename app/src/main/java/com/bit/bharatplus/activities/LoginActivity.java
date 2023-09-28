@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                                 setInProgress(false);
                                 AndroidUtils.showToast(getApplicationContext(), "Verification Failed"+" "+e.getMessage());
 //                                Dialogs.showErrorDialog(LoginActivity.this,e.getMessage());
-                                AndroidUtils.showDialog(LoginActivity.this, "Error", e.getMessage());
+                                AndroidUtils.showAlertDialog(LoginActivity.this, "Error", e.getMessage());
                             }
 
                             @Override

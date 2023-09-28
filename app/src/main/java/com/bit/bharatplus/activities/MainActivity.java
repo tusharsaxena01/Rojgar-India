@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                             .commit();
                     return true;
                 }else{
-                    AndroidUtils.showDialog(getApplicationContext(), "Warning", "Unknown Error Occurred");
+                    AndroidUtils.showAlertDialog(MainActivity.this, "Warning", "Unknown Error Occurred");
                     return false;
                 }
 

@@ -54,6 +54,7 @@ public class VerifyOTP extends AppCompatActivity {
         binding.tvResendOTP.setEnabled(false); // Disable the button initially
 
 
+
         addEditTextToArray(binding);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
