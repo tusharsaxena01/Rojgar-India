@@ -73,6 +73,11 @@ public class CompleteProfileActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         DatabaseReference professionRef = db.getReference().child("Professions");
 
+        // disable submit button if fields not completed
+        binding.btnSubmit.setEnabled(false);
+        // setting text color to white
+        int greyColor = getApplicationContext().getResources().getColor(R.color.grey, getTheme());
+        binding.btnSubmit.setTextColor(greyColor);
         // setup phone number from shared preference
         binding.etPhoneNumber.setText(sp.getString("phone", "Error"));
 
