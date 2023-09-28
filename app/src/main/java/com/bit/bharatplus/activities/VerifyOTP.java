@@ -107,6 +107,7 @@ public class VerifyOTP extends AppCompatActivity {
 //                                            saveUser(getIntent().getStringExtra("phone"));
                                             sp.edit()
                                                     .putString("phone", getIntent().getStringExtra("phone"))
+                                                    .putBoolean("profileCompleted", false)
                                                     .apply();
                                             startActivity(intent);
                                         } else {

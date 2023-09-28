@@ -1,5 +1,6 @@
 package com.bit.bharatplus.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,6 +21,17 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     SharedPreferences sp;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sp = getSharedPreferences("data", 0);
+        if(!sp.getBoolean("profileCompleted", false)){
+            startActivity(new Intent(MainActivity.this, CompleteProfileActivity.class));
+            finish();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
