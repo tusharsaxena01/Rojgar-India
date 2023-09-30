@@ -157,8 +157,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(isResend){
             PhoneAuthProvider.verifyPhoneNumber(
-                    builder.setForceResendingToken(resendingToken).build()
-            );
+                    builder.setForceResendingToken(resendingToken).build());
         }else{
             PhoneAuthProvider.verifyPhoneNumber(
                     builder.build()
