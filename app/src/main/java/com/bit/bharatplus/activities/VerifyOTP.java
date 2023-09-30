@@ -19,7 +19,6 @@ import com.bit.bharatplus.databinding.ActivityVerifyOtpBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -30,14 +29,19 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class VerifyOTP extends AppCompatActivity {
     ActivityVerifyOtpBinding binding;
     String backEndOTP;
+    String phoneNumber;
     FirebaseAuth mAuth;
     FirebaseDatabase mDatabase;
     SharedPreferences sp;
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    long timeoutSeconds = 60L;
+
+    //    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     ArrayList<EditText> otps = new ArrayList<EditText>();
 
     @Override
@@ -53,30 +57,9 @@ public class VerifyOTP extends AppCompatActivity {
 
 
         addEditTextToArray(binding);
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                setInProgress(false);
-                Log.d("Phone Authentication", "onVerificationCompleted:" + phoneAuthCredential);
-                signInWithPhoneAuthCredential(phoneAuthCredential);
-            }
+        phoneNumber = getIntent().getStringExtra("phone");
 
-            @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
-                setInProgress(false);
-                Log.w("Phone Authentication", "onVerificationFailed: " + e.getMessage());
-                AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", e.getMessage());
-            }
-
-            @Override
-            public void onCodeSent(@NonNull String newBackEndOTP, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                setInProgress(false);
-                backEndOTP = newBackEndOTP;
-                AndroidUtils.showToast(getApplicationContext(), "OTP sent Successfully");
-            }
-        };
-
-        binding.tvMobile.setText(getIntent().getStringExtra("phone"));
+        binding.tvMobile.setText(phoneNumber);
         backEndOTP = getIntent().getStringExtra("OTP");
 
         otpDigitMove();
@@ -96,27 +79,8 @@ public class VerifyOTP extends AppCompatActivity {
                         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(
                                 backEndOTP, enteredOTP
                         );
-                        mAuth.signInWithCredential(phoneAuthCredential)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        setInProgress(false);
-                                        if (task.isSuccessful()) {
-                                            Intent intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                            saveUser(getIntent().getStringExtra("phone"));
-                                            sp.edit()
-                                                    .putString("phone", getIntent().getStringExtra("phone"))
-                                                    .putBoolean("profileCompleted", false)
-                                                    .apply();
-                                            startActivity(intent);
-                                        } else {
-//                                            AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
-                                            AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", Objects.requireNonNull(task.getException()).getMessage());
-                                        }
-                                    }
-                                })
-                        ;
+                        signIn(phoneAuthCredential);
+
                     } else {
                         AndroidUtils.showToast(getApplicationContext(), "Unable to Fetch OTP from server");
                     }
@@ -126,15 +90,15 @@ public class VerifyOTP extends AppCompatActivity {
         });
 
         // enable resend btn after 30 seconds
-
-        Handler handler = new Handler();
-        Runnable enableResendButtonRunnable = new Runnable() {
-            @Override
-            public void run() {
-                binding.tvResendOTP.setEnabled(true); // Enable the button
-            }
-        };
-        handler.postDelayed(enableResendButtonRunnable, 30 * 1000);
+        startResendTimer();
+//        Handler handler = new Handler();
+//        Runnable enableResendButtonRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                binding.tvResendOTP.setEnabled(true); // Enable the button
+//            }
+//        };
+//        handler.postDelayed(enableResendButtonRunnable, 30 * 1000);
         binding.tvResendOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,32 +106,67 @@ public class VerifyOTP extends AppCompatActivity {
                 // Disable the button to prevent multiple clicks
                 binding.tvResendOTP.setEnabled(false);
 
-                // Schedule the Runnable to enable the button after 30 seconds
-                handler.postDelayed(enableResendButtonRunnable, 30 * 1000); // 30 seconds in milliseconds
-
                 // Add your code to resend OTP here
-                new LoginActivity().sendOTP("+91" + getIntent().getStringExtra("mobile"), true);
+                new LoginActivity().sendOTP(phoneNumber, true);
             }
         });
 
         // code ends
-//
-//        binding.tvResendOTP.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new LoginActivity().sendOTP("+91"+getIntent().getStringExtra("mobile"), true);
-////                PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
-////                        .setPhoneNumber(String.format("+91%s", getIntent().getStringExtra("mobile")))
-////                        .setTimeout(60L, TimeUnit.SECONDS)
-////                        .setActivity(VerifyOTP.this)
-////                        .setCallbacks(mCallbacks)
-////                        .build();
-////                // resend the otp
-////                PhoneAuthProvider.verifyPhoneNumber(options);
-//            }
-//        });
 
+    }
 
+    private void startResendTimer() {
+        binding.tvResendOTP.setEnabled(true);
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                timeoutSeconds--;
+                String message = "Resend OTP in "+timeoutSeconds+" secs";
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.tvResendOTPMessage.setText(message);
+                    }
+                });
+                if(timeoutSeconds<=0){
+                    timeoutSeconds = 60L;
+                    timer.cancel();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.tvResendOTP.setEnabled(true);
+                        }
+                    });
+                }
+            }
+        }, 0, 1000);
+    }
+
+    private void signIn(PhoneAuthCredential phoneAuthCredential) {
+        setInProgress(true);
+
+        mAuth.signInWithCredential(phoneAuthCredential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        setInProgress(false);
+                        if (task.isSuccessful()) {
+                            Intent intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            saveUser(getIntent().getStringExtra("phone"));
+                            sp.edit()
+                                    .putString("phone", phoneNumber)
+                                    .putBoolean("profileCompleted", false)
+                                    .apply();
+                            startActivity(intent);
+                        } else {
+                            AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
+                            AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", Objects.requireNonNull(task.getException()).getMessage());
+                        }
+                    }
+                })
+        ;
     }
 
     private void addEditTextToArray(ActivityVerifyOtpBinding binding) {
@@ -179,28 +178,6 @@ public class VerifyOTP extends AppCompatActivity {
         otps.add(binding.etOTP6);
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
-        mAuth.signInWithCredential(phoneAuthCredential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Phone Authentication", "signInWithCredential:success");
-
-                            FirebaseUser user = task.getResult().getUser();
-                            // Update UI
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.w("Phone Authentication", "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                                AndroidUtils.showAlertDialog(VerifyOTP.this, "Warning", task.getException().getMessage());
-                            }
-                        }
-                    }
-                });
-    }
 
     private void setInProgress(boolean inProgress) {
         if (inProgress) {

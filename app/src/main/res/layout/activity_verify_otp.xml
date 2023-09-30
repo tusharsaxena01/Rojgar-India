@@ -155,9 +155,10 @@
                 android:layout_marginTop="10dp">
 
                 <TextView
+                    android:id="@+id/tvResendOTPMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Didn't Receive OTP?"
+                    android:text="Resend OTP in 60 secs "
                     />
                 <TextView
                     android:id="@+id/tvResendOTP"

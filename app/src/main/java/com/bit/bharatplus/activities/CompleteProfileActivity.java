@@ -7,7 +7,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BlendMode;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -171,7 +173,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!binding.btnSubmit.isEnabled()){
-                    AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "All Fields Required");
+                    AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "All Fields are Required");
                     return;
                 }
                 if(validate()) {
@@ -279,7 +281,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
             currentImageURL = url;
             uploadedImage = true;
             binding.btnSubmit.setEnabled(true);
-
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                binding.btnSubmit.setBackgroundTintBlendMode(BlendMode.MULTIPLY);
+//            }
             // setting text color to white
             int whiteColor = context.getResources().getColor(R.color.white, getTheme());
             binding.btnSubmit.setTextColor(whiteColor);
@@ -319,9 +323,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
         String profession = binding.etProfession.getSelectedItem().toString();
         String gender = binding.etGender.getSelectedItem().toString();
         String phoneNumber = sp.getString("phone", "9876543210");
-        Log.e("check", "profession: "+profession+" gender: "+gender);
         User user = new User(uid, profilePictureURL, name, profession, gender, phoneNumber);
         db.getReference("Users")
+                .child(uid)
                 .setValue(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
