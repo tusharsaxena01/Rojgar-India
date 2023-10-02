@@ -7,12 +7,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BlendMode;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -22,11 +19,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bit.bharatplus.R;
-import com.bit.bharatplus.classes.User;
+import com.bit.bharatplus.classes.UserModel;
 import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.manager.RequestManagerRetriever;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,8 +50,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
     StorageReference storageReference;
     SharedPreferences sp;
     ActivityCompleteProfileBinding binding;
-    List<String> professions;
-    String[] genders = {"Male", "Female"};
+    List<String> professions = new ArrayList<>();
+    List<String> genders = new ArrayList<>();
     String currentImageURL;
     boolean uploadedImage = false;
 
@@ -74,6 +72,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+
         DatabaseReference professionRef = db.getReference().child("Professions");
 
         // disable submit button if fields not completed
@@ -85,14 +84,16 @@ public class CompleteProfileActivity extends AppCompatActivity {
         binding.etPhoneNumber.setText(sp.getString("phone", "Error"));
 
         // setting up spinner for gender
-        ArrayAdapter genderAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders);
+        genders.add("Male");
+        genders.add("Female");
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genders);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.etGender.setAdapter(genderAdapter);
 
         // setting up spinner for professions
-        professions = new ArrayList<>();
+//        professions = new ArrayList<>();
         professions.add("Loading...");
-        ArrayAdapter professionAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, professions);
+        ArrayAdapter<String> professionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, professions);
         professionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.etProfession.setAdapter(professionAdapter);
         // fetching professions from the server
@@ -115,6 +116,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", "Error Fetching Data from Server");
             }
         });
+
+        userUserIfAlreadyExists(mAuth.getCurrentUser().getUid());
+
 
         // if clicked on phone
         binding.etPhoneNumber.setOnClickListener(new View.OnClickListener() {
@@ -178,11 +182,15 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 }
                 if(validate()) {
                     saveUser(mAuth.getUid());
-                    sp.edit().putBoolean("profileCompleted", true).apply();
+                    sp.edit()
+                            .putString("CurrentUserName", binding.etName.getText().toString())
+                            .putString("CurrentUserPhone", binding.etPhoneNumber.getText().toString())
+                            .putString("CurrentProfilePictureURL", currentImageURL)
+                            .putBoolean("profileCompleted", true).apply();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            startActivity(new Intent(CompleteProfileActivity.this, MainActivity.class));
+                            startActivity(new Intent(CompleteProfileActivity.this, NavigationActivity.class));
                             finish();
                         }
                     },2000);
@@ -193,6 +201,36 @@ public class CompleteProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void userUserIfAlreadyExists(String uid) {
+        db.getReference("Users")
+                .child(uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            UserModel userModel = snapshot.getValue(UserModel.class);
+                            if(userModel != null)
+                                updateUI(userModel);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", error.getMessage());
+                    }
+                });
+    }
+
+    private void updateUI(UserModel userModel) {
+        if(userModel.getProfilePictureURL() != null){
+            updateProfileImage(userModel.getProfilePictureURL());
+        }
+        binding.etName.setText(userModel.getName());
+//        binding.etProfession.setSelection(professions.indexOf(userModel.getProfession()));
+        binding.etGender.setSelection(genders.indexOf(userModel.getGender()));
+        AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "Network Error, Could not Fetch your Profession");
     }
 
     private boolean validate() {
@@ -274,7 +312,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
         if (isValidContextForGlide(context)){
             // Load image via Glide lib using context
-            Glide.with(this)
+            Glide.with(getApplicationContext())
                     .load(url)
                     .centerCrop()
                     .into(binding.ivProfile);
@@ -323,10 +361,10 @@ public class CompleteProfileActivity extends AppCompatActivity {
         String profession = binding.etProfession.getSelectedItem().toString();
         String gender = binding.etGender.getSelectedItem().toString();
         String phoneNumber = sp.getString("phone", "9876543210");
-        User user = new User(uid, profilePictureURL, name, profession, gender, phoneNumber);
+        UserModel userModel = new UserModel(uid, profilePictureURL, name, profession, gender, phoneNumber);
         db.getReference("Users")
                 .child(uid)
-                .setValue(user)
+                .setValue(userModel)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -340,5 +378,11 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Glide.with(getApplicationContext()).clear(binding.ivProfile);
     }
 }

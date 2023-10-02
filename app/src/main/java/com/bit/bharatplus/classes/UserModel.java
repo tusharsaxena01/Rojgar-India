@@ -2,19 +2,19 @@ package com.bit.bharatplus.classes;
 
 import java.net.URI;
 
-public class User {
-    String uid;
-    URI profilePictureURI;
-    String profilePictureURL;
-    String name;
-    String profession;
-    String gender;
-    String phoneNumber;
+public class UserModel {
+    private String uid;
+    private URI profilePictureURI;
+    private String profilePictureURL;
+    private String name;
+    private String profession;
+    private String gender;
+    private String phoneNumber;
 
-    public User() {
+    public UserModel() {
     }
 
-    public User(String uid, URI profileURI, String name, String profession, String gender, String phoneNumber) {
+    public UserModel(String uid, URI profileURI, String name, String profession, String gender, String phoneNumber) {
         this.uid = uid;
         this.profilePictureURI = profileURI;
         this.name = name;
@@ -23,7 +23,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public User(String uid, String profileURL, String name, String profession, String gender, String phoneNumber) {
+    public UserModel(String uid, String profileURL, String name, String profession, String gender, String phoneNumber) {
         this.uid = uid;
         this.profilePictureURL = profileURL;
         this.name = name;

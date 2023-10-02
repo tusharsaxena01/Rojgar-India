@@ -17,7 +17,7 @@ import com.bit.bharatplus.fragments.ShopFragment;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class NavigationActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     SharedPreferences sp;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         sp = getSharedPreferences("data", 0);
         if(!sp.getBoolean("profileCompleted", false)){
-            startActivity(new Intent(MainActivity.this, CompleteProfileActivity.class));
+            startActivity(new Intent(NavigationActivity.this, CompleteProfileActivity.class));
             finish();
         }
     }
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                             .commit();
                     return true;
                 }else{
-                    AndroidUtils.showAlertDialog(MainActivity.this, "Warning", "Unknown Error Occurred");
+                    AndroidUtils.showAlertDialog(NavigationActivity.this, "Warning", "Unknown Error Occurred");
                     return false;
                 }
 

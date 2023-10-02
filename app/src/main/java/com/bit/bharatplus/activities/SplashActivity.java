@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
                     if(!sp.getBoolean("profileCompleted", false)){
                         intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
                     }else
-                        intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent = new Intent(getApplicationContext(), NavigationActivity.class);
                 }
                 startActivity(intent);
                 finishAffinity();
