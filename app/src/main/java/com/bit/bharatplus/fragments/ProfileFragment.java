@@ -22,6 +22,7 @@ import com.bit.bharatplus.R;
 import com.bit.bharatplus.activities.CompleteProfileActivity;
 import com.bit.bharatplus.activities.LoginActivity;
 import com.bit.bharatplus.activities.NavigationActivity;
+import com.bit.bharatplus.activities.SettingsActivity;
 import com.bit.bharatplus.adapters.ProfileOptionsAdapter;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.databinding.FragmentProfileBinding;
@@ -49,6 +50,7 @@ public class ProfileFragment extends Fragment {
         addDrawablesToList();
         addOptionsToList();
 
+        // todo: fix this area to update details after details are updated
         binding.include.tvUsername.setText(sp.getString("CurrentUserName", "Error"));
         binding.include.tvPhoneNumber.setText(sp.getString("CurrentUserPhone", "Error"));
         Glide.with(requireContext())
@@ -63,10 +65,13 @@ public class ProfileFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(options.get(position).equals("Settings")){
                     Log.d("check", "Settings");
+                    requireActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
                 } else if (options.get(position).equals("Help")) {
                     Log.d("check", "Help");
                 } else if (options.get(position).equals("Logout")) {
-                    getActivity().runOnUiThread(() -> {
+                    Log.d("check", "Logout");
+
+                    requireActivity().runOnUiThread(() -> {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                         DialogConfirmBinding confirmDialogBinding = DialogConfirmBinding.inflate(LayoutInflater.from(requireContext()));

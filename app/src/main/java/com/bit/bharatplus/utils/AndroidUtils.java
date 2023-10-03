@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.bit.bharatplus.activities.CompleteProfileActivity;
 import com.bit.bharatplus.databinding.DialogAlertBinding;
 
 public class AndroidUtils {
+    static AlertDialog currentDialog;
     public static void showToast(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
@@ -87,5 +89,12 @@ public class AndroidUtils {
 
         dialog.show();
 
+        if(CompleteProfileActivity.isValidContextForGlide(context))
+            currentDialog = dialog;
     }
+
+    public static void dismissCurrentDialog(){
+        currentDialog.dismiss();
+    }
+
 }

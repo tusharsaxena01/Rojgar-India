@@ -24,7 +24,6 @@ import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.manager.RequestManagerRetriever;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +40,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class CompleteProfileActivity extends AppCompatActivity {
@@ -117,7 +117,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
             }
         });
 
-        userUserIfAlreadyExists(mAuth.getCurrentUser().getUid());
+        updateUserIfAlreadyExists(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
 
 
         // if clicked on phone
@@ -186,6 +186,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
                             .putString("CurrentUserName", binding.etName.getText().toString())
                             .putString("CurrentUserPhone", binding.etPhoneNumber.getText().toString())
                             .putString("CurrentProfilePictureURL", currentImageURL)
+                            .putString("CurrentUserGender", binding.etGender.getSelectedItem().toString())
+                            .putString("CurrentUserProfession", binding.etProfession.getSelectedItem().toString())
                             .putBoolean("profileCompleted", true).apply();
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -203,7 +205,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
     }
 
-    private void userUserIfAlreadyExists(String uid) {
+    private void updateUserIfAlreadyExists(String uid) {
         db.getReference("Users")
                 .child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
