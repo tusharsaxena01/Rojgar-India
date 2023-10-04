@@ -50,12 +50,7 @@ public class ProfileFragment extends Fragment {
         addDrawablesToList();
         addOptionsToList();
 
-        // todo: fix this area to update details after details are updated
-        binding.include.tvUsername.setText(sp.getString("CurrentUserName", "Error"));
-        binding.include.tvPhoneNumber.setText(sp.getString("CurrentUserPhone", "Error"));
-        Glide.with(requireContext())
-                .load(sp.getString("CurrentProfilePictureURL", "https://cdn-icons-png.flaticon.com/512/149/149071.png"))
-                .into(binding.include.ivProfile);
+        setCurrentUserDetails();
 
         adapter = new ProfileOptionsAdapter(requireContext(), R.layout.options_list_layout, drawables, options);
         binding.profileListView.setAdapter(adapter);
@@ -105,6 +100,14 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void setCurrentUserDetails() {
+        binding.include.tvUsername.setText(sp.getString("CurrentUserName", "Error"));
+        binding.include.tvPhoneNumber.setText(sp.getString("CurrentUserPhone", "Error"));
+        Glide.with(requireContext())
+                .load(sp.getString("CurrentProfilePictureURL", "https://cdn-icons-png.flaticon.com/512/149/149071.png"))
+                .into(binding.include.ivProfile);
+    }
+
     private void addOptionsToList() {
         options = new ArrayList<>();
         options.add("Settings");
@@ -117,5 +120,11 @@ public class ProfileFragment extends Fragment {
         drawables.add(R.drawable.baseline_settings_24);
         drawables.add(R.drawable.baseline_help_24);
         drawables.add(R.drawable.baseline_logout_24);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setCurrentUserDetails();
     }
 }
