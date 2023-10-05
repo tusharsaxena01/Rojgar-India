@@ -32,6 +32,9 @@ public class ShopFragment extends Fragment {
                 startActivity(new Intent(getContext(), LoginActivity.class));
             }
         });
+
+
+
         return binding.getRoot();
     }
 }
