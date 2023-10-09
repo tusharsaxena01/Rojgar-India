@@ -35,6 +35,17 @@ public class ShopFragment extends Fragment {
 
 
 
+
+
         return binding.getRoot();
     }
+
+    private void setNotification(boolean newNotifications){
+        if(newNotifications){
+            binding.tvNotificationCounter.setVisibility(View.VISIBLE);
+        }else{
+            binding.tvNotificationCounter.setVisibility(View.INVISIBLE);
+        }
+    }
+
 }

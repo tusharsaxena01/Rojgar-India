@@ -387,4 +387,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
         super.onDestroy();
         Glide.with(getApplicationContext()).clear(binding.ivProfile);
     }
+    
+
 }
