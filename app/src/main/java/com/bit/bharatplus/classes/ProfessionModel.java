@@ -1,7 +1,11 @@
 package com.bit.bharatplus.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ProfessionModel {
+    @SerializedName("profession")
     String profession;
+    @SerializedName("iconUrl")
     String iconURL;
 
     public String getProfession() {
