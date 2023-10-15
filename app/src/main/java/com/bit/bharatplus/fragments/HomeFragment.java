@@ -28,8 +28,7 @@ public class HomeFragment extends Fragment {
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(getContext(), LoginActivity.class));
+
             }
         });
         return binding.getRoot();

@@ -10,8 +10,11 @@
 
         <!--     todo: header here   -->
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/background_white_edit_text"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,77 +24,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/background_white_edit_text"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:drawablePadding="10dp"
+                android:background="null"
                 android:elevation="10dp"
                 android:hint="Search"
-                android:padding="5dp" />
+                android:padding="10dp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:padding="8dp">
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/black" />
 
-                <ImageButton
-                    android:id="@+id/btnCart"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/baseline_shopping_cart_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/black"
-                    android:scaleType="fitCenter"
-                    />
-
-                <TextView
-                    android:id="@+id/tvNotificationCounter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/circle_background"
-                    android:elevation="1dp"
-                    android:padding="2dp"
-                    android:textColor="@color/white"
-                    android:textSize="6dp"
-                    app:layout_constraintEnd_toEndOf="@id/btnCart"
-                    app:layout_constraintTop_toTopOf="@id/btnCart"
-                    android:visibility="invisible"
-                    tools:text="1" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerProfession"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shop" />
-
-            <TextView
-                android:id="@+id/tvCurrentUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Current Phone Here" />
-
-            <Button
-                android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Logout" />
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
