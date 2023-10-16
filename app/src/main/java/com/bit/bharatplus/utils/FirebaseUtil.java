@@ -5,9 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.bit.bharatplus.classes.UserModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.bit.bharatplus.models.UserModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;

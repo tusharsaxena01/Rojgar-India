@@ -19,7 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bit.bharatplus.R;
-import com.bit.bharatplus.classes.UserModel;
+import com.bit.bharatplus.models.UserModel;
 import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.utils.AndroidUtils;

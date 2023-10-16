@@ -1,4 +1,4 @@
-package com.bit.bharatplus.classes;
+package com.bit.bharatplus.models;
 
 import com.google.gson.annotations.SerializedName;
 

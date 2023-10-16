@@ -15,16 +15,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import com.bit.bharatplus.R;
-import com.bit.bharatplus.classes.UserModel;
+import com.bit.bharatplus.models.UserModel;
 import com.bit.bharatplus.databinding.ActivitySettingsBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bit.bharatplus.utils.FirebaseUtil;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="4dp">
 
     <LinearLayout
@@ -16,13 +17,12 @@
         android:orientation="vertical"
         android:gravity="center"
         android:padding="10dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
         android:elevation="12dp">
 
         <ImageView
             android:id="@+id/ivProfession"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             tools:src="@drawable/baseline_person_24"
             />
         <TextView
