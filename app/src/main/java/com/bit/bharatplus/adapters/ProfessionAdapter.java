@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.bharatplus.R;
-import com.bit.bharatplus.activities.ButtonClickShopActivity;
+import com.bit.bharatplus.activities.ButtonClickHomeActivity;
 import com.bit.bharatplus.models.ProfessionModel;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bumptech.glide.Glide;
@@ -59,8 +59,8 @@ public class ProfessionAdapter extends RecyclerView.Adapter<ProfessionAdapter.Pr
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ButtonClickShopActivity.class);
-                intent.putExtra("type", "profession");
+                Intent intent = new Intent(context, ButtonClickHomeActivity.class);
+                intent.putExtra("name", "profession");
                 intent.putExtra("Profession name", profession.getProfession());
                 context.startActivity(intent);
             }
