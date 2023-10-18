@@ -1,17 +1,31 @@
 package com.bit.bharatplus.utils;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.bit.bharatplus.models.UserModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class FirebaseUtil {
+
+    public static DatabaseReference getLocationDatabaseReference(){
+        return FirebaseDatabase.getInstance().getReference("locations");
+    }
+    
+    public static String getCurrentUserId(){
+        return Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+    }
+
 
     public static UserModel getCurrentUserDetails(Context context, String uid){
         final UserModel[] userModel = new UserModel[1];

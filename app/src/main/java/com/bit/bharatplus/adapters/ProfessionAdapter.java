@@ -2,6 +2,7 @@ package com.bit.bharatplus.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.bharatplus.R;
+import com.bit.bharatplus.activities.ButtonClickShopActivity;
 import com.bit.bharatplus.models.ProfessionModel;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bumptech.glide.Glide;
@@ -54,7 +56,18 @@ public class ProfessionAdapter extends RecyclerView.Adapter<ProfessionAdapter.Pr
             AndroidUtils.showToast(context, "Unknown Error Occurred");
         }
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ButtonClickShopActivity.class);
+                intent.putExtra("type", "profession");
+                intent.putExtra("Profession name", profession.getProfession());
+                context.startActivity(intent);
+            }
+        });
+
     }
+
 
 
     public static boolean isValidContextForGlide(final Context context) {
@@ -74,8 +87,8 @@ public class ProfessionAdapter extends RecyclerView.Adapter<ProfessionAdapter.Pr
     }
 
     public static class ProfessionViewHolder extends RecyclerView.ViewHolder {
-        private TextView profession;
-        private ImageView icon;
+        private final TextView profession;
+        private final ImageView icon;
 
         public ProfessionViewHolder(@NonNull View itemView) {
             super(itemView);

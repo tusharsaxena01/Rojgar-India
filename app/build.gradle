@@ -64,4 +64,7 @@ dependencies {
     //volley
     implementation 'com.android.volley:volley:1.2.1' // For making network requests
 
+    // location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
 }

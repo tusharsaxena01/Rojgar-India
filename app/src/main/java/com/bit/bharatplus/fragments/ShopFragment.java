@@ -5,9 +5,12 @@ import static com.google.firebase.database.util.JsonMapper.parseJson;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 
@@ -15,15 +18,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.bit.bharatplus.MyBottomSheetDialogFragment;
+import com.bit.bharatplus.R;
 import com.bit.bharatplus.adapters.ImageSliderAdapter;
 import com.bit.bharatplus.adapters.ProductAdapter;
 import com.bit.bharatplus.adapters.ProfessionAdapter;
+import com.bit.bharatplus.databinding.DrawerLayoutShopBinding;
 import com.bit.bharatplus.models.ProductModel;
 import com.bit.bharatplus.models.ProfessionModel;
 import com.bit.bharatplus.databinding.FragmentShopBinding;
@@ -67,11 +75,7 @@ public class ShopFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        // setup profession recycler
-        binding.recyclerProfession.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.HORIZONTAL, false));
-        professionAdapter = new ProfessionAdapter();
-        binding.recyclerProfession.setAdapter(professionAdapter);
-        fetchProfession();
+        DrawerLayoutShopBinding drawerLayoutShopBinding = DrawerLayoutShopBinding.inflate(getLayoutInflater());
         setupBannerSwitcher();
 
         binding.recyclerProducts.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
@@ -88,44 +92,46 @@ public class ShopFragment extends Fragment {
                 boolean isScrolledToTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
 
                 if(isScrolledToTop){
-                    fadeInView(binding.tvHeaderProfessionals);
+//                    fadeInView(binding.tvHeaderProfessionals);
                     fadeInView(binding.vpBanner);
-                    fadeInView(binding.recyclerProfession);
+//                    fadeInView(binding.recyclerProfession);
                 }else{
-                    fadeOutView(binding.tvHeaderProfessionals);
+//                    fadeOutView(binding.tvHeaderProfessionals);
                     fadeOutView(binding.vpBanner);
-                    fadeOutView(binding.recyclerProfession);
+//                    fadeOutView(binding.recyclerProfession);
 
                 }
             }
         });
 
-        // hide the profession and banner if the products are scrolled
-//
-//        binding.recyclerProducts.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                int startScroll = oldScrollY;
-//                if (scrollY > 1) {
-//                    // Scrolled down
-//                    binding.tvHeaderProfessionals.setVisibility(View.GONE);
-//                    binding.recyclerProfession.setVisibility(View.GONE);
-//                    binding.vpBanner.setVisibility(View.GONE);
-//                } else{
-//                    // Scrolled up
-//                    binding.tvHeaderProfessionals.setVisibility(View.VISIBLE);
-//                    binding.recyclerProfession.setVisibility(View.VISIBLE);
-//                    binding.vpBanner.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
+        binding.etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    binding.recyclerProducts.setVisibility(View.GONE);
+                }
+                else{
+                    binding.recyclerProducts.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
 
-
+        binding.btnOpenDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetDialog();
+            }
+        });
 
         return binding.getRoot();
     }
 
+    private void showBottomSheetDialog() {
+        MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment();
+        bottomSheetDialogFragment.show(getChildFragmentManager(), bottomSheetDialogFragment.getTag());
+
+    }
 
     private void fadeInView(View view) {
         view.animate()
@@ -165,7 +171,7 @@ public class ShopFragment extends Fragment {
                     // Parse the JSON data into a list of products
                     List<ProductModel> productList = parseJsonForProduct(json);
 
-                    Log.e("profession", productList.toString());
+                    Log.e("product", productList.toString());
 
                     // Update the UI on the main thread
                     requireActivity().runOnUiThread(() -> {
@@ -264,42 +270,9 @@ public class ShopFragment extends Fragment {
 
     }
 
-    private void fetchProfession() {
-        OkHttpClient client = new OkHttpClient();
-        String url = "https://raw.githubusercontent.com/tusharsaxena01/Bharat-Plus/master/app/data/professions.json";
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    String jsonData = response.body().string();
-                    Gson gson = new Gson();
-                    Type professionListType = new TypeToken<List<ProfessionModel>>(){}.getType();
-                    List<ProfessionModel> professionList = gson.fromJson(jsonData, professionListType);
-
-                    Log.e("profession", professionList.toString());
-
-                    requireActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            professionAdapter.setProfessionList(professionList);
-                            professionAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
-        });
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        binding.etSearch.clearFocus();
     }
-
 }

@@ -11,6 +11,8 @@ public class UserModel {
     private String gender;
     private String phoneNumber;
 
+    private String location;
+
     public UserModel() {
     }
 
@@ -21,6 +23,14 @@ public class UserModel {
         this.profession = profession;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public UserModel(String uid, String profileURL, String name, String profession, String gender, String phoneNumber) {

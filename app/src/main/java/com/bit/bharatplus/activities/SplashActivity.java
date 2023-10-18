@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bit.bharatplus.LocationService;
 import com.bit.bharatplus.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -32,6 +33,10 @@ public class SplashActivity extends AppCompatActivity {
                     }else
                         intent = new Intent(getApplicationContext(), NavigationActivity.class);
                 }
+
+                // Start the LocationService
+                Intent locationIntent = new Intent(getApplicationContext(), LocationService.class);
+                startService(locationIntent);
                 startActivity(intent);
                 finishAffinity();
             }

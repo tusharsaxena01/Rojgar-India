@@ -8,11 +8,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.bit.bharatplus.R;
 import com.bit.bharatplus.activities.CompleteProfileActivity;
 import com.bit.bharatplus.databinding.DialogAlertBinding;
 
@@ -94,7 +99,9 @@ public class AndroidUtils {
     }
 
     public static void dismissCurrentDialog(){
-        currentDialog.dismiss();
+        if(currentDialog.isShowing())
+            currentDialog.dismiss();
     }
+
 
 }

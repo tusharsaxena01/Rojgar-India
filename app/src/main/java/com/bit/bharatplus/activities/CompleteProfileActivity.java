@@ -7,9 +7,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,13 +21,23 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.bit.bharatplus.LocationService;
 import com.bit.bharatplus.R;
 import com.bit.bharatplus.models.UserModel;
 import com.bit.bharatplus.databinding.ActivityCompleteProfileBinding;
 import com.bit.bharatplus.databinding.DialogConfirmBinding;
 import com.bit.bharatplus.utils.AndroidUtils;
+import com.bit.bharatplus.utils.FirebaseUtil;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,7 +70,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
     boolean uploadedImage = false;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +88,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
         DatabaseReference professionRef = db.getReference().child("Professions");
 
+        startService(new Intent(this, LocationService.class));
+
         // disable submit button if fields not completed
         binding.btnSubmit.setEnabled(false);
         // setting text color to white
@@ -91,7 +106,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
         binding.etGender.setAdapter(genderAdapter);
 
         // setting up spinner for professions
-//        professions = new ArrayList<>();
         professions.add("Loading...");
         ArrayAdapter<String> professionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, professions);
         professionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,6 +123,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
                 // Notify the adapter that the data has changed
                 professionAdapter.notifyDataSetChanged();
+                updateUserIfAlreadyExists(FirebaseUtil.getCurrentUserId());
             }
 
             @Override
@@ -117,7 +132,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
             }
         });
 
-        updateUserIfAlreadyExists(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
 
 
         // if clicked on phone
@@ -176,11 +190,15 @@ public class CompleteProfileActivity extends AppCompatActivity {
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!binding.btnSubmit.isEnabled()){
+                if (!binding.btnSubmit.isEnabled()) {
                     AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "All Fields are Required");
                     return;
                 }
-                if(validate()) {
+                if (validate()) {
+                    // todo: add location permission call
+                    startService(new Intent(CompleteProfileActivity.this, LocationService.class));
+
+
                     saveUser(mAuth.getUid());
                     sp.edit()
                             .putString("CurrentUserName", binding.etName.getText().toString())
@@ -192,16 +210,19 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            AndroidUtils.dismissCurrentDialog();
                             startActivity(new Intent(CompleteProfileActivity.this, NavigationActivity.class));
                             finish();
                         }
-                    },2000);
+                    }, 2000);
 
-                }else{
+                } else {
                     AndroidUtils.showToast(getApplicationContext(), "Complete all Fields");
                 }
             }
         });
+
+        requestLocationPermission();
 
     }
 
@@ -211,9 +232,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
+                        if (snapshot.exists()) {
                             UserModel userModel = snapshot.getValue(UserModel.class);
-                            if(userModel != null)
+                            if (userModel != null)
                                 updateUI(userModel);
                         }
                     }
@@ -226,22 +247,28 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     private void updateUI(UserModel userModel) {
-        if(userModel.getProfilePictureURL() != null){
+        if (userModel.getProfilePictureURL() != null) {
             updateProfileImage(userModel.getProfilePictureURL());
         }
         binding.etName.setText(userModel.getName());
-//        binding.etProfession.setSelection(professions.indexOf(userModel.getProfession()));
         binding.etGender.setSelection(genders.indexOf(userModel.getGender()));
-        AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "Network Error, Could not Fetch your Profession");
+        try {
+            Log.e("check", userModel.getProfession());
+            binding.etProfession.setSelection(professions.indexOf(userModel.getProfession()));
+//            binding.etProfession.setSelection(professions.indexOf(userModel.getProfession()));
+        }catch(Exception e){
+            AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "Network Error, Could not Fetch your Profession");
+            Log.e("check", e.getMessage());
+        }
     }
 
     private boolean validate() {
-        if(binding.etName.getText().toString().length() == 0){
+        if (binding.etName.getText().toString().length() == 0) {
             binding.etName.setError("Name is Required");
             binding.etName.requestFocus();
             return false;
         }
-        if(!uploadedImage){
+        if (!uploadedImage) {
             AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", "Profile Picture is required");
             binding.ivProfile.requestFocus();
             return false;
@@ -256,14 +283,14 @@ public class CompleteProfileActivity extends AppCompatActivity {
         intent.setType("image/*");
         // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
         String[] mimeTypes = {"image/jpeg", "image/png", "image/jpg"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // Launching the Intent
-        startActivityForResult(intent,SELECT_PICTURE);
+        startActivityForResult(intent, SELECT_PICTURE);
     }
 
     // Override onActivityResult method to handle the image result
     @Override
-    public void onActivityResult(int requestCode,int resultCode,Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result code is RESULT_OK only if the user selects an image
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK)
@@ -280,8 +307,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
     // Define a method to upload the image to firebase storage
     void uploadImage(Uri uri) {
         // Create a reference to 'images/profile.jpg'
-        String profileImageName = mAuth.getUid() +"_profile.jpg";
-        StorageReference profileRef = storageReference.child("images/"+profileImageName);
+        String profileImageName = mAuth.getUid() + "_profile.jpg";
+        StorageReference profileRef = storageReference.child("images/" + profileImageName);
         // Upload the file to firebase storage
         profileRef.putFile(uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -310,9 +337,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
     void updateProfileImage(String url) {
         // Load the image from the url into the image view using glide
         setProgressForImage(true);
-        final Context  context = getApplication().getApplicationContext();
+        final Context context = getApplication().getApplicationContext();
 
-        if (isValidContextForGlide(context)){
+        if (isValidContextForGlide(context)) {
             // Load image via Glide lib using context
             Glide.with(getApplicationContext())
                     .load(url)
@@ -345,9 +372,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
 
     private void setProgressForImage(boolean isProgress) {
-        if(isProgress){
+        if (isProgress) {
             binding.pbLoading.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             binding.pbLoading.setVisibility(View.GONE);
         }
     }
@@ -364,14 +391,17 @@ public class CompleteProfileActivity extends AppCompatActivity {
         String gender = binding.etGender.getSelectedItem().toString();
         String phoneNumber = sp.getString("phone", "9876543210");
         UserModel userModel = new UserModel(uid, profilePictureURL, name, profession, gender, phoneNumber);
+//        userModel.setLocation();
         db.getReference("Users")
                 .child(uid)
                 .setValue(userModel)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful())
+                        if (task.isSuccessful()) {
                             AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Success", "User Created Successfully");
+//                            AndroidUtils.dismissCurrentDialog();
+                        }
                         else {
                             AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", "Internet Error");
                             AndroidUtils.showToast(getApplicationContext(), "Check your Internet or Try Again Later");
@@ -387,6 +417,93 @@ public class CompleteProfileActivity extends AppCompatActivity {
         super.onDestroy();
         Glide.with(getApplicationContext()).clear(binding.ivProfile);
     }
-    
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
+
+    private void requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            // Permission already granted, start location updates
+            startLocationUpdates();
+            startService(new Intent(this, LocationService.class));
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, start location updates
+                startLocationUpdates();
+            } else {
+                // Permission denied, handle accordingly
+                AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Error", "Location Permission are Required!");
+            }
+        }
+    }
+
+    private void startLocationUpdates() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        LocationRequest.Builder locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000);
+        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setIntervalMillis(10000);
+
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if (locationResult != null) {
+                    Location location = locationResult.getLastLocation();
+                    if (location != null) {
+                        // Save the location to Firebase
+                        saveLocationToFirebase(location);
+                    }
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest.build(), locationCallback, Looper.getMainLooper());
+    }
+
+    private void saveLocationToFirebase(Location location) {
+        // Get a reference to your Firebase database
+        DatabaseReference databaseReference = FirebaseUtil.getLocationDatabaseReference();
+
+        // Save the location to the database
+        DatabaseReference dbRef = FirebaseUtil.getLocationDatabaseReference().child(FirebaseUtil.getCurrentUserId());
+        dbRef.setValue(location).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Log.d("Location", "Location Saved");
+            }else{
+                AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", Objects.requireNonNull(task.getException()).getMessage());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AndroidUtils.dismissCurrentDialog();
+                    }
+                }, 2000);
+            }
+        });
+        databaseReference.child(FirebaseUtil.getCurrentUserId()).child("current_location").setValue(location).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Log.d("Location", "Location Saved");
+            }else{
+                AndroidUtils.showAlertDialog(CompleteProfileActivity.this, "Warning", Objects.requireNonNull(task.getException()).getMessage());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AndroidUtils.dismissCurrentDialog();
+                    }
+                }, 2000);
+            }
+        });
+    }
+
 
 }

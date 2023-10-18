@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.bit.bharatplus.LocationService;
 import com.bit.bharatplus.R;
 import com.bit.bharatplus.databinding.ActivityMainBinding;
 import com.bit.bharatplus.fragments.HomeFragment;
@@ -40,16 +41,8 @@ public class NavigationActivity extends AppCompatActivity {
         sp = getSharedPreferences("data", 0);
         String phoneNumber = sp.getString("phone", "9876543210");
 
-//        binding.tvCurrentUser.setText(phoneNumber);
-//        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                Intent loginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
-//                startActivity(loginActivityIntent);
-//                finishAffinity();
-//            }
-//        });
+        startService(new Intent(this, LocationService.class));
+
 
         binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -79,5 +72,24 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(this, LocationService.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Stop the LocationService
+        Intent intent = new Intent(this, LocationService.class);
+        stopService(intent);
+    }
+
+
 }

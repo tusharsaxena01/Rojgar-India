@@ -2,6 +2,7 @@ package com.bit.bharatplus.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.bharatplus.R;
+import com.bit.bharatplus.activities.ButtonClickShopActivity;
 import com.bit.bharatplus.models.ProductModel;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bumptech.glide.Glide;
@@ -66,6 +68,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             Log.e("Product", "Product Image Setup Failed for position"+position);
         }
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ButtonClickShopActivity.class);
+                intent.putExtra("type", "product");
+                intent.putExtra("Product id", product.getProductId());
+                intent.putExtra("Product name", product.getProductName());
+                intent.putExtra("Product price",product.getProductPrice());
+                intent.putExtra("Product brand", product.getProductBrand());
+                intent.putExtra("Product desc", product.getProductDescription());
+                intent.putExtra("Product category", product.getProductCategory());
+                ArrayList<String> images = new ArrayList<String>();
+                images.addAll(product.getProductImages());
+                intent.putExtra("Product images", images);
+                intent.putExtra("Product rating", product.getProductRating());
+                intent.putExtra("Product stocks", product.getProductStocks());
+                intent.putExtra("Product thumbnail", product.getProductThumbnailURL());
+
+                context.startActivity(intent);
+            }
+        });
+
     }
 
 
@@ -86,12 +110,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        private TextView productName;
-        private TextView productPrice;
-        private TextView productDiscount;
-        private TextView productRatings;
+        private final TextView productName;
+        private final TextView productPrice;
+        private final TextView productDiscount;
+        private final TextView productRatings;
 
-        private ImageView productImage;
+        private final ImageView productImage;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);

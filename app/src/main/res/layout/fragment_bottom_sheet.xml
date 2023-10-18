@@ -1,0 +1,58 @@
+<!-- res/layout/fragment_bottom_sheet.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:layout_gravity="bottom">
+
+    <!-- Customize the content of your bottom sheet -->
+
+    <!-- Add your navigation items here -->
+    <!--
+    1. Find Jobs
+    2. Find Workers
+    3. Update Location
+    4. Post Job
+    5. Shop
+
+      -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Find Jobs"
+        android:padding="16dp"
+        android:clickable="true"
+        android:id="@+id/nav_item1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Find Workers"
+        android:padding="16dp"
+        android:clickable="true"
+        android:id="@+id/nav_item2" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Location"
+        android:padding="16dp"
+        android:clickable="true"
+        android:id="@+id/nav_item3" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Post Jobs"
+        android:padding="16dp"
+        android:clickable="true"
+        android:id="@+id/nav_item4" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shop"
+        android:padding="16dp"
+        android:clickable="true"
+        android:id="@+id/nav_item5" />
+
+</LinearLayout>
