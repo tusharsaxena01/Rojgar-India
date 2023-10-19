@@ -73,6 +73,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 intent.putExtra("type", "product");
                 intent.putExtra("Product id", product.getProductId());
                 intent.putExtra("Product name", product.getProductName());
+//                String productPrice = "₹ "+product.getProductPrice();
                 intent.putExtra("Product price",product.getProductPrice());
                 intent.putExtra("Product brand", product.getProductBrand());
                 intent.putExtra("Product desc", product.getProductDescription());

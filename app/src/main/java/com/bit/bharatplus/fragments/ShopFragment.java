@@ -1,40 +1,25 @@
 package com.bit.bharatplus.fragments;
 
-import static com.google.firebase.database.util.JsonMapper.parseJson;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.bit.bharatplus.MyBottomSheetDialogFragment;
-import com.bit.bharatplus.R;
 import com.bit.bharatplus.adapters.ImageSliderAdapter;
 import com.bit.bharatplus.adapters.ProductAdapter;
 import com.bit.bharatplus.adapters.ProfessionAdapter;
 import com.bit.bharatplus.databinding.DrawerLayoutShopBinding;
-import com.bit.bharatplus.models.ProductModel;
-import com.bit.bharatplus.models.ProfessionModel;
 import com.bit.bharatplus.databinding.FragmentShopBinding;
+import com.bit.bharatplus.models.ProductModel;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,19 +27,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;

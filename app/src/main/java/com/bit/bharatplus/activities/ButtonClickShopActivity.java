@@ -26,13 +26,14 @@ public class ButtonClickShopActivity extends AppCompatActivity {
         binding.ivBack.setOnClickListener(v -> onBackPressed());
         Intent oldIntent = getIntent();
         String productName = oldIntent.getStringExtra("Product name");
-        String productPrice = oldIntent.getStringExtra("Product price");
+        String productPrice = "₹ "+ oldIntent.getDoubleExtra("Product price", 520);
         String productBrand = oldIntent.getStringExtra("Product brand");
         String productDesc = oldIntent.getStringExtra("Product desc");
         String productCategory = oldIntent.getStringExtra("Product category");
         ArrayList<String> productImages = new ArrayList<String>();
         productImages.addAll(oldIntent.getStringArrayListExtra("Product images"));
-        String productRating = oldIntent.getStringExtra("Product rating");
+        String productRating = ""+oldIntent.getDoubleExtra("Product rating", 4.2);
+//        String productRating = oldIntent.getStringExtra("Product rating");
 
         binding.tvHeader.setText(productName);
         binding.productName.setText(productName);
@@ -47,7 +48,6 @@ public class ButtonClickShopActivity extends AppCompatActivity {
         }catch (Exception e){
             AndroidUtils.showAlertDialog(this, "Error", "Unknown Error Occurred");
             AndroidUtils.showAlertDialog(this, "Warning", "Internet Connection Error, Firebase Server not Responding");
-
         }
         binding.productRating.setText(productRating);
         setupImages(productImages);

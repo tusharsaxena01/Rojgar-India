@@ -56,19 +56,14 @@ public class ProfessionAdapter extends RecyclerView.Adapter<ProfessionAdapter.Pr
             AndroidUtils.showToast(context, "Unknown Error Occurred");
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ButtonClickHomeActivity.class);
-                intent.putExtra("name", "profession");
-                intent.putExtra("Profession name", profession.getProfession());
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ButtonClickHomeActivity.class);
+            intent.putExtra("name", "profession");
+            intent.putExtra("Profession name", profession.getProfession());
+            context.startActivity(intent);
         });
 
     }
-
-
 
     public static boolean isValidContextForGlide(final Context context) {
         if (context == null) {

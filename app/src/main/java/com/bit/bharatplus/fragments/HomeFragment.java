@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 import okhttp3.Call;
@@ -103,41 +104,48 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchProfession() {
-        OkHttpClient client = new OkHttpClient();
-        String url = "https://raw.githubusercontent.com/tusharsaxena01/Bharat-Plus/master/app/data/professions.json";
+        try {
+            OkHttpClient client = new OkHttpClient();
+            String url = "https://raw.githubusercontent.com/tusharsaxena01/Bharat-Plus/master/app/data/professions.json";
 
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    String jsonData = response.body().string();
-                    Gson gson = new Gson();
-                    Type professionListType = new TypeToken<List<ProfessionModel>>(){}.getType();
-                    List<ProfessionModel> professionList = gson.fromJson(jsonData, professionListType);
-
-                    Log.e("profession", professionList.toString());
-
-                    requireActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            professionAdapter.setProfessionList(professionList);
-                            professionAdapter.notifyDataSetChanged();
-                        }
-                    });
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
                 }
-            }
-        });
 
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        String jsonData = response.body().string();
+                        Gson gson = new Gson();
+                        Type professionListType = new TypeToken<List<ProfessionModel>>() {
+                        }.getType();
+                        List<ProfessionModel> professionList = gson.fromJson(jsonData, professionListType);
+
+                        Log.e("profession", professionList.toString());
+
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                professionAdapter.setProfessionList(professionList);
+                                professionAdapter.notifyDataSetChanged();
+                                if(!professionList.isEmpty())
+                                    binding.pbLoading.setVisibility(View.GONE);
+                            }
+                        });
+//                        professionAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }catch(Exception e){
+            AndroidUtils.showAlertDialog(requireContext(), "Warning", "Internet Connection Error, "+e.getMessage());
+        }
     }
 
 }
