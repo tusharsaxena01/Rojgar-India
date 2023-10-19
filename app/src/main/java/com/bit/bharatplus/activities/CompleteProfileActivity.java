@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -88,7 +89,11 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
         DatabaseReference professionRef = db.getReference().child("Professions");
 
-        startService(new Intent(this, LocationService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, LocationService.class));
+        }else{
+            startService(new Intent(this, LocationService.class));
+        }
 
         // disable submit button if fields not completed
         binding.btnSubmit.setEnabled(false);
@@ -196,7 +201,11 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 }
                 if (validate()) {
                     // todo: add location permission call
-                    startService(new Intent(CompleteProfileActivity.this, LocationService.class));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(new Intent(CompleteProfileActivity.this, LocationService.class));
+                    }else{
+                        startService(new Intent(CompleteProfileActivity.this, LocationService.class));
+                    }
 
 
                     saveUser(mAuth.getUid());

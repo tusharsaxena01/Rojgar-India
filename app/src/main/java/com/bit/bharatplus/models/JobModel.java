@@ -20,6 +20,25 @@ public class JobModel {
     public JobModel() {
     }
 
+    public JobModel(boolean isCompleted, String jobDescription, String jobId, String jobPostedBy, String jobTitle) {
+        this.isCompleted = isCompleted;
+        this.jobId = jobId;
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.jobPostedBy = jobPostedBy;
+    }
+
+    @Override
+    public String toString() {
+        return "JobModel{" +
+                "jobId='" + jobId + '\'' +
+                ", jobTitle='" + jobTitle + '\'' +
+                ", jobDescription='" + jobDescription + '\'' +
+                ", jobTimeStamp='" + jobTimeStamp + '\'' +
+                ", jobPostedBy='" + jobPostedBy + '\'' +
+                ", isCompleted=" + isCompleted +
+                '}';
+    }
 
     public JobModel(String jobId, String jobTitle, String jobDescription, String jobTimeStamp, String jobPostedBy) {
         this.jobId = jobId;

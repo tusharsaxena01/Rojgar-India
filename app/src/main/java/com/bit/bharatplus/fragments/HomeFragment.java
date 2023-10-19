@@ -1,6 +1,7 @@
 package com.bit.bharatplus.fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,7 +78,11 @@ public class HomeFragment extends Fragment {
         binding.updateLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().startService(new Intent(requireContext(), LocationService.class));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requireActivity().startForegroundService(new Intent(requireContext(), LocationService.class));
+                }else{
+                    requireActivity().startService(new Intent(requireContext(), LocationService.class));
+                }
             }
         });
 

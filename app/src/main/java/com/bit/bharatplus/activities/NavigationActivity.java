@@ -2,6 +2,7 @@ package com.bit.bharatplus.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -41,7 +42,11 @@ public class NavigationActivity extends AppCompatActivity {
         sp = getSharedPreferences("data", 0);
         String phoneNumber = sp.getString("phone", "9876543210");
 
-        startService(new Intent(this, LocationService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, LocationService.class));
+        }else{
+            startService(new Intent(this, LocationService.class));
+        }
 
 
         binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -79,7 +84,11 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        startService(new Intent(this, LocationService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, LocationService.class));
+        }else{
+            startService(new Intent(this, LocationService.class));
+        }
     }
 
     @Override

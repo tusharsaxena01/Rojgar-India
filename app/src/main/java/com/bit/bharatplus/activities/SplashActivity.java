@@ -2,6 +2,7 @@ package com.bit.bharatplus.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -36,7 +37,11 @@ public class SplashActivity extends AppCompatActivity {
 
                 // Start the LocationService
                 Intent locationIntent = new Intent(getApplicationContext(), LocationService.class);
-                startService(locationIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(locationIntent);
+                }else{
+                    startService(locationIntent);
+                }
                 startActivity(intent);
                 finishAffinity();
             }

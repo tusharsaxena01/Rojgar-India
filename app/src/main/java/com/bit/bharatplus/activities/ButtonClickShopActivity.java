@@ -46,6 +46,8 @@ public class ButtonClickShopActivity extends AppCompatActivity {
             }
         }catch (Exception e){
             AndroidUtils.showAlertDialog(this, "Error", "Unknown Error Occurred");
+            AndroidUtils.showAlertDialog(this, "Warning", "Internet Connection Error, Firebase Server not Responding");
+
         }
         binding.productRating.setText(productRating);
         setupImages(productImages);

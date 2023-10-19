@@ -41,8 +41,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         ProductModel product = productList.get(position);
-//        holder.profession.setText(profession.getProduct());
-//        holder.icon.setText(profession.getIconURL());
 
         holder.productName.setText(product.getProductName());
         String productPrice = "₹ "+product.getProductPrice();

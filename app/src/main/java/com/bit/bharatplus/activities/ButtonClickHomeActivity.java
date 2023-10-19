@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
-import com.bit.bharatplus.R;
 import com.bit.bharatplus.adapters.JobsAdapter;
 import com.bit.bharatplus.databinding.ActivityButtonClickHomeBinding;
 import com.bit.bharatplus.models.JobModel;
-import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +41,85 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
         }
         if(pageName.equals("workers")){
             // setup everything for workers
-//            setupForWorkers();
+            setupForWorkers();
+        }
+        if(pageName.equals("profession")){
+            // setup everything for professions
+            setupForProfessions(oldIntent.getStringExtra("Profession name"));
         }
 
+        binding.dummy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialPhone(binding.postedBy.getText().toString());
+            }
+        });
+
+    }
+
+    private void setupForProfessions(String profession_name) {
+        binding.jobTitle.setText("Manoj");
+        binding.jobDesc.setText(profession_name);
+        binding.jobTime.setVisibility(View.GONE);
+    }
+
+    private void dialPhone(String phone) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel: "+ phone));
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }else{
+            startActivity(intent);
+        }
+    }
+
+    private void setupForWorkers() {
+        binding.tvHeader.setText("Workers");
+
+        List<JobModel> jobsList = new ArrayList<JobModel>();
+        jobsAdapter = new JobsAdapter(jobsList);
+        binding.recycler.setAdapter(jobsAdapter);
+
+        // Fetch available jobs from the Firebase Realtime Database
+        DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("jobs");
+        jobsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                jobsList.clear();
+
+                for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
+                    String jobId = jobSnapshot.getKey();
+                    JobModel job = jobSnapshot.getValue(JobModel.class);
+                    assert job != null;
+                    job.setJobId(jobId);
+                    jobsList.add(job);
+                    Log.d("job", job.toString());
+                }
+
+                jobsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle database errors if any
+                Log.e("Jobs", "Database Error: " + databaseError.getMessage());
+            }
+        });
+
+        if(jobsList.isEmpty()){
+//            binding.tvMessage.setText("No Openings available currently");
+//            binding.tvMessage.setVisibility(View.VISIBLE);
+//            binding.recycler.setVisibility(View.GONE);
+        }else{
+            binding.dummy.setVisibility(View.GONE);
+            binding.tvMessage.setVisibility(View.GONE);
+            binding.recycler.setVisibility(View.VISIBLE);
+        }
+
+
+        binding.jobTitle.setText("Manoj");
+        binding.jobDesc.setText("Car Mechanic");
+        binding.jobTime.setVisibility(View.GONE);
     }
 
     private void setupForJobs() {
@@ -60,8 +136,12 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
                 jobsList.clear();
 
                 for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
+                    String jobId = jobSnapshot.getKey();
                     JobModel job = jobSnapshot.getValue(JobModel.class);
+                    assert job != null;
+                    job.setJobId(jobId);
                     jobsList.add(job);
+                    Log.d("job", job.toString());
                 }
 
                 jobsAdapter.notifyDataSetChanged();
@@ -70,15 +150,16 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle database errors if any
-                AndroidUtils.showAlertDialog(ButtonClickHomeActivity.this, "Error", databaseError.getMessage());
+                Log.e("Jobs", "Database Error: " + databaseError.getMessage());
             }
         });
 
         if(jobsList.isEmpty()){
-            binding.tvMessage.setText("No Openings available currently");
-            binding.tvMessage.setVisibility(View.VISIBLE);
-            binding.recycler.setVisibility(View.GONE);
+//            binding.tvMessage.setText("No Openings available currently");
+//            binding.tvMessage.setVisibility(View.VISIBLE);
+//            binding.recycler.setVisibility(View.GONE);
         }else{
+            binding.dummy.setVisibility(View.GONE);
             binding.tvMessage.setVisibility(View.GONE);
             binding.recycler.setVisibility(View.VISIBLE);
         }
