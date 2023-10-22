@@ -22,29 +22,26 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         sp = getSharedPreferences("data", 0);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent;
-                if(mAuth.getCurrentUser() == null){
-                intent = new Intent(getApplicationContext(), LoginActivity.class);
-                }else{
-                    if(!sp.getBoolean("profileCompleted", false)){
-                        intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
-                    }else
-                        intent = new Intent(getApplicationContext(), NavigationActivity.class);
-                }
-
-                // Start the LocationService
-                Intent locationIntent = new Intent(getApplicationContext(), LocationService.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(locationIntent);
-                }else{
-                    startService(locationIntent);
-                }
-                startActivity(intent);
-                finishAffinity();
+        new Handler().postDelayed(() -> {
+            Intent intent;
+            if(mAuth.getCurrentUser() == null){
+            intent = new Intent(getApplicationContext(), LoginActivity.class);
+            }else{
+                if(!sp.getBoolean("profileCompleted", false)){
+                    intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
+                }else
+                    intent = new Intent(getApplicationContext(), NavigationActivity.class);
             }
+
+            // Start the LocationService
+            Intent locationIntent = new Intent(getApplicationContext(), LocationService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(locationIntent);
+            }else{
+                startService(locationIntent);
+            }
+            startActivity(intent);
+            finishAffinity();
         },3000);
     }
 }

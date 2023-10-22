@@ -2,12 +2,12 @@ package com.bit.bharatplus.models;
 
 
 public class JobModel {
-    String jobId;
-    String jobTitle;
-    String jobDescription;
-    String jobTimeStamp;
-    String jobPostedBy;
-    boolean isCompleted;
+    private String jobId;
+    private String jobTitle;
+    private String jobDescription;
+    private String jobTimeStamp;
+    private String jobPostedBy;
+    private boolean isCompleted;
 
     public boolean isCompleted() {
         return isCompleted;

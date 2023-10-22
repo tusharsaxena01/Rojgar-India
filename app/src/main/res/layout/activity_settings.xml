@@ -39,10 +39,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="6"
             android:gravity="center"
-            android:text="Settings"
+            android:text="@string/settings"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -100,7 +100,7 @@
             android:layout_alignBottom="@id/ivProfileFrame"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/baseline_edit_24"
-            android:contentDescription="Update Profile Image" />
+            android:contentDescription="@string/update_profile_image" />
 
         <TextView
             android:id="@+id/labelName"
@@ -110,7 +110,7 @@
             android:layout_alignStart="@id/etName"
             android:layout_marginTop="10dp"
             android:padding="2dp"
-            android:text="Name"
+            android:text="@string/name"
             android:textStyle="bold" />
 
         <EditText
@@ -121,7 +121,7 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/background_white_edit_text"
-            android:hint="Name"
+            android:hint="@string/name"
             android:inputType="textCapWords"
             android:maxLength="255"
             android:maxLines="1"
@@ -136,7 +136,7 @@
             android:layout_alignStart="@id/etProfession"
             android:layout_marginTop="10dp"
             android:padding="2dp"
-            android:text="Profession"
+            android:text="@string/profession"
             android:textStyle="bold" />
 
         <TextView
@@ -161,7 +161,7 @@
             android:layout_alignStart="@id/etGender"
             android:layout_marginTop="10dp"
             android:padding="2dp"
-            android:text="Gender"
+            android:text="@string/gender"
             android:textStyle="bold" />
 
         <TextView
@@ -185,7 +185,7 @@
             android:layout_alignStart="@id/etPhoneNumber"
             android:layout_marginTop="10dp"
             android:padding="2dp"
-            android:text="Phone Number"
+            android:text="@string/phone_number"
             android:textStyle="bold" />
 
         <TextView
@@ -210,7 +210,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="28dp"
         android:background="@drawable/rounded_background_success"
-        android:text="DONE"
+        android:text="@string/done"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:enabled="false"

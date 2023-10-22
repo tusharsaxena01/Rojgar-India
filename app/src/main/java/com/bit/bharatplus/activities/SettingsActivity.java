@@ -2,9 +2,6 @@ package com.bit.bharatplus.activities;
 
 import static com.bit.bharatplus.activities.CompleteProfileActivity.isValidContextForGlide;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -15,13 +12,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import com.bit.bharatplus.models.UserModel;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bit.bharatplus.databinding.ActivitySettingsBinding;
+import com.bit.bharatplus.models.UserModel;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bit.bharatplus.utils.FirebaseUtil;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.Objects;
 
@@ -57,22 +54,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         getExistingUserInfo(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
 
-        binding.btnEditProfilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // request for permission if not already granted
-                requestForPermissions();
+        binding.btnEditProfilePicture.setOnClickListener(v -> {
+            // request for permission if not already granted
+            requestForPermissions();
 
-                openImageChooser();
-            }
+            openImageChooser();
         });
 
-        binding.btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validate()) {
-                    updateUserInfo(mAuth.getCurrentUser().getUid(), binding.etName.getText().toString(), updatedProfilePictureURL);
-                }
+        binding.btnDone.setOnClickListener(v -> {
+            if (validate()) {
+                updateUserInfo(mAuth.getCurrentUser().getUid(), binding.etName.getText().toString(), updatedProfilePictureURL);
             }
         });
 
@@ -127,25 +118,16 @@ public class SettingsActivity extends AppCompatActivity {
         StorageReference profileRef = storageReference.child("images/" + profileImageName);
         // Upload the file to firebase storage
         profileRef.putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get the download url of the uploaded file
-                        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                // Use the url to update the profile image using glide
-                                updateProfileImage(uri.toString());
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        AndroidUtils.showAlertDialog(SettingsActivity.this, "Warning", "Upload Failed");
-                        AndroidUtils.showToast(getApplicationContext(), "Upload failed");
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Get the download url of the uploaded file
+                    profileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                        // Use the url to update the profile image using glide
+                        updateProfileImage(uri1.toString());
+                    });
+                }).addOnFailureListener(exception -> {
+                    // Handle unsuccessful uploads
+                    AndroidUtils.showAlertDialog(SettingsActivity.this, "Warning", "Upload Failed");
+                    AndroidUtils.showToast(getApplicationContext(), "Upload failed");
                 });
     }
 
@@ -193,42 +175,17 @@ public class SettingsActivity extends AppCompatActivity {
                                 .apply();
 
                         AndroidUtils.showAlertDialog(SettingsActivity.this, "Success", "Profile Updated Successfully");
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                AndroidUtils.dismissCurrentDialog();
-                                onBackPressed();
-                            }
+                        new Handler().postDelayed(() -> {
+                            AndroidUtils.dismissCurrentDialog();
+                            onBackPressed();
                         }, 2000);
                     }else{
-                        AndroidUtils.showAlertDialog(SettingsActivity.this, "Error", task.getException().getMessage());
+                        AndroidUtils.showAlertDialog(SettingsActivity.this, "Error", Objects.requireNonNull(task.getException()).getMessage());
                     }
             });
 
     }
 
-//    private UserModel getCurrentUserDetails(String uid) {
-//        final UserModel[] userModel = new UserModel[1];
-//        db.getReference("Users")
-//                .child(uid)
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if(snapshot.exists()){
-//                            UserModel existingUserModel = snapshot.getValue(UserModel.class);
-//                            if(existingUserModel != null){
-//                                userModel[0] = existingUserModel;
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        AndroidUtils.showAlertDialog(SettingsActivity.this, "Error", error.getMessage());
-//                    }
-//                });
-//        return userModel[0];
-//    }
 
     private boolean validate() {
         if(binding.etName.getText().toString().length() == 0){

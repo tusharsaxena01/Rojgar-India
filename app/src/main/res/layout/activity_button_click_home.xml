@@ -56,7 +56,7 @@
                 android:id="@+id/jobTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Car Wash"
+                android:text="@string/dummy_profession"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/jobDesc"
@@ -70,13 +70,13 @@
                 app:layout_constraintBottom_toBottomOf="@id/jobTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/jobTitle"
-                android:text="19-10-23" />
+                android:text="@string/dummy_date" />
 
             <TextView
                 android:id="@+id/jobDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Car Washing Job in gorakhpur"
+                android:text="@string/dummy_location"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toTopOf="@id/postedBy"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +87,7 @@
                 android:id="@+id/postedBy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+917007459349"
+                android:text="@string/dummy_phone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/jobDesc" />
 

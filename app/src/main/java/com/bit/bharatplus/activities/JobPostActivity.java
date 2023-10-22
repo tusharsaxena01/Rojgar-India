@@ -2,26 +2,17 @@ package com.bit.bharatplus.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bit.bharatplus.R;
 import com.bit.bharatplus.databinding.ActivityJobPostBinding;
 import com.bit.bharatplus.models.JobModel;
 import com.bit.bharatplus.utils.AndroidUtils;
 import com.bit.bharatplus.utils.FirebaseUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -43,57 +34,51 @@ public class JobPostActivity extends AppCompatActivity {
         binding.ivBack.setOnClickListener(v -> onBackPressed());
 
         // Set click listener for postJobButton
-        binding.btnPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Get the input values
-                String title = binding.etJobTitle.getText().toString().trim();
-                String desc = binding.etJobDesc.getText().toString().trim();
+        binding.btnPost.setOnClickListener(view -> {
+            // Get the input values
+            String title = binding.etJobTitle.getText().toString().trim();
+            String desc = binding.etJobDesc.getText().toString().trim();
 
-                // Get the current time
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                String currentTime = dateFormat.format(calendar.getTime());
+            // Get the current time
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            String currentTime = dateFormat.format(calendar.getTime());
 
 
-                // Check if any of the fields are empty
-                if (title.isEmpty() || desc.isEmpty()) {
-                    Toast.makeText(JobPostActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                    AndroidUtils.showAlertDialog(JobPostActivity.this, "Warning", "Please fill in all fields");
-                } else {
-                    try{// Generate a unique key for the job entry in the database
-                        String jobId = databaseReference.push().getKey();
+            // Check if any of the fields are empty
+            if (title.isEmpty() || desc.isEmpty()) {
+                Toast.makeText(JobPostActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                AndroidUtils.showAlertDialog(JobPostActivity.this, "Warning", "Please fill in all fields");
+            } else {
+                try{// Generate a unique key for the job entry in the database
+                    String jobId = databaseReference.push().getKey();
 
-                        // Create a new instance of the Job class
-                        JobModel job = new JobModel(jobId, title, desc, currentTime, FirebaseUtil.getCurrentUserId());
+                    // Create a new instance of the Job class
+                    JobModel job = new JobModel(jobId, title, desc, currentTime, FirebaseUtil.getCurrentUserId());
 
-                        // Save the job entry to the database
-                        assert jobId != null;
-                        databaseReference.child(jobId).setValue(job).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(!task.isSuccessful())
-                                    AndroidUtils.showAlertDialog(JobPostActivity.this, "Error", task.getException().getMessage());
-                                else{
-                                    Toast.makeText(JobPostActivity.this, "Job posted successfully", Toast.LENGTH_SHORT).show();
-                                    AndroidUtils.showAlertDialog(JobPostActivity.this, "Success", "Job Posted Successfully");
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            AndroidUtils.dismissCurrentDialog();
-                                        }
-                                    }, 2000);
+                    // Save the job entry to the database
+                    assert jobId != null;
+                    databaseReference.child(jobId).setValue(job).addOnCompleteListener(task -> {
+                        if(!task.isSuccessful())
+                            AndroidUtils.showAlertDialog(JobPostActivity.this, "Error", task.getException().getMessage());
+                        else{
+                            Toast.makeText(JobPostActivity.this, "Job posted successfully", Toast.LENGTH_SHORT).show();
+                            AndroidUtils.showAlertDialog(JobPostActivity.this, "Success", "Job Posted Successfully");
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AndroidUtils.dismissCurrentDialog();
                                 }
-                            }
-                        });
+                            }, 2000);
+                        }
+                    });
 
 
-                        // Clear the input fields
-                        binding.etJobTitle.setText("");
-                        binding.etJobDesc.setText("");
-                    }catch (Exception e){
-                        AndroidUtils.showAlertDialog(JobPostActivity.this, "Error",e.getLocalizedMessage());
-                    }
+                    // Clear the input fields
+                    binding.etJobTitle.setText("");
+                    binding.etJobDesc.setText("");
+                }catch (Exception e){
+                    AndroidUtils.showAlertDialog(JobPostActivity.this, "Error",e.getLocalizedMessage());
                 }
             }
         });

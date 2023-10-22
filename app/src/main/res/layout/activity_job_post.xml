@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Post Jobs"
+            android:text="@string/post_jobs"
             android:textSize="32sp" />
     </LinearLayout>
 
@@ -46,7 +46,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="vertical">
 
@@ -54,7 +54,7 @@
                 android:id="@+id/etJobTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Job Title"
+                android:hint="@string/job_title"
                 android:background="@drawable/background_white_edit_text"
                 android:padding="20dp"
                 android:layout_marginBottom="10dp"
@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="100dp"
-                android:hint="Job Description"
+                android:hint="@string/job_description"
                 android:background="@drawable/background_white_edit_text"
                 android:padding="20dp"
                 android:layout_marginTop="10dp"
@@ -78,7 +78,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="* When Posted, Your Number will be shared with other users"
+                android:text="@string/disclaimer"
                 android:textAlignment="textStart"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -93,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_background_success"
-        android:text="Post"
+        android:text="@string/post"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/scrollView"
         app:layout_constraintBottom_toBottomOf="parent"

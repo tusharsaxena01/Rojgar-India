@@ -21,38 +21,43 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Find Jobs"
+        android:text="@string/find_jobs"
         android:padding="16dp"
         android:clickable="true"
-        android:id="@+id/nav_item1" />
+        android:id="@+id/nav_item1"
+        android:focusable="true" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Find Workers"
+        android:text="@string/find_workers"
         android:padding="16dp"
         android:clickable="true"
-        android:id="@+id/nav_item2" />
+        android:id="@+id/nav_item2"
+        android:focusable="true" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update Location"
+        android:text="@string/update_location"
         android:padding="16dp"
         android:clickable="true"
-        android:id="@+id/nav_item3" />
+        android:id="@+id/nav_item3"
+        android:focusable="true" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Post Jobs"
+        android:text="@string/post_jobs"
         android:padding="16dp"
         android:clickable="true"
-        android:id="@+id/nav_item4" />
+        android:id="@+id/nav_item4"
+        android:focusable="true" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Shop"
+        android:text="@string/shop"
         android:padding="16dp"
         android:clickable="true"
-        android:id="@+id/nav_item5" />
+        android:id="@+id/nav_item5"
+        android:focusable="true" />
 
 </LinearLayout>

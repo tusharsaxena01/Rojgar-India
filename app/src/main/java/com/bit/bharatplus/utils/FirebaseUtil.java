@@ -1,7 +1,6 @@
 package com.bit.bharatplus.utils;
 
 import android.content.Context;
-import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;

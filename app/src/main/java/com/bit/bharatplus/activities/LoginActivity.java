@@ -41,33 +41,25 @@ public class LoginActivity extends AppCompatActivity {
         setInProgress(false);
 
         // move the focus to edittext when clicked on ll
-        activityLoginBinding.llMobileNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activityLoginBinding.etMobile.requestFocus();
-            }
-        });
+        activityLoginBinding.llMobileNo.setOnClickListener(v -> activityLoginBinding.etMobile.requestFocus());
 
         // change focus to button
         changeFocus();
 
         // when clicked on get otp btn
-        activityLoginBinding.btnGetOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setInProgress(true);
-                if(validatePhone(activityLoginBinding.etMobile.getText().toString())){
+        activityLoginBinding.btnGetOTP.setOnClickListener(v -> {
+            setInProgress(true);
+            if(validatePhone(activityLoginBinding.etMobile.getText().toString())){
 
-                    String phoneNumber = "+91"+activityLoginBinding.etMobile.getText().toString();
+                String phoneNumber = "+91"+activityLoginBinding.etMobile.getText().toString();
 
-                    sendOTP(phoneNumber, false);
+                sendOTP(phoneNumber, false);
 
-                }else{
-                    // if return false then get focus back on phone number edittext
-                    setInProgress(false);
-                    activityLoginBinding.etMobile.setError("Invalid Mobile Number");
-                    activityLoginBinding.llMobileNo.requestFocus();
-                }
+            }else{
+                // if return false then get focus back on phone number edittext
+                setInProgress(false);
+                activityLoginBinding.etMobile.setError("Invalid Mobile Number");
+                activityLoginBinding.llMobileNo.requestFocus();
             }
         });
     }
@@ -131,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                signIn(phoneNumber,phoneAuthCredential);
+                                signIn(phoneNumber);
                                 setInProgress(false);
                             }
 
@@ -166,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void signIn(String phoneNumber, PhoneAuthCredential phoneAuthCredential) {
+    private void signIn(String phoneNumber) {
         //login and go to next activity
         Intent verifyOTPIntent = new Intent(getApplicationContext(), VerifyOTP.class);
         verifyOTPIntent.putExtra("phone", phoneNumber);

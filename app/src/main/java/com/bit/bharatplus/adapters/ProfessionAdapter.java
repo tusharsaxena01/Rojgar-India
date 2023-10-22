@@ -41,7 +41,6 @@ public class ProfessionAdapter extends RecyclerView.Adapter<ProfessionAdapter.Pr
     public void onBindViewHolder(@NonNull ProfessionViewHolder holder, int position) {
         ProfessionModel profession = professionList.get(position);
         holder.profession.setText(profession.getProfession());
-//        holder.icon.setText(profession.getIconURL());
 
         String imageUrl = profession.getIconURL();
         if(isValidContextForGlide(context)){

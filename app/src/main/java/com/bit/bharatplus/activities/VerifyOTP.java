@@ -86,24 +86,13 @@ public class VerifyOTP extends AppCompatActivity {
 
         // enable resend btn after 30 seconds
         startResendTimer();
-//        Handler handler = new Handler();
-//        Runnable enableResendButtonRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                binding.tvResendOTP.setEnabled(true); // Enable the button
-//            }
-//        };
-//        handler.postDelayed(enableResendButtonRunnable, 30 * 1000);
-        binding.tvResendOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AndroidUtils.showToast(getApplicationContext(), "Clicked");
-                // Disable the button to prevent multiple clicks
-                binding.tvResendOTP.setEnabled(false);
+        binding.tvResendOTP.setOnClickListener(v -> {
+            AndroidUtils.showToast(getApplicationContext(), "Clicked");
+            // Disable the button to prevent multiple clicks
+            binding.tvResendOTP.setEnabled(false);
 
-                // Add your code to resend OTP here
-                new LoginActivity().sendOTP(phoneNumber, true);
-            }
+            // Add your code to resend OTP here
+            new LoginActivity().sendOTP(phoneNumber, true);
         });
 
         // code ends
@@ -118,21 +107,11 @@ public class VerifyOTP extends AppCompatActivity {
             public void run() {
                 timeoutSeconds--;
                 String message = "Resend OTP in "+timeoutSeconds+" secs";
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        binding.tvResendOTPMessage.setText(message);
-                    }
-                });
+                runOnUiThread(() -> binding.tvResendOTPMessage.setText(message));
                 if(timeoutSeconds<=0){
                     timeoutSeconds = 60L;
                     timer.cancel();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            binding.tvResendOTP.setEnabled(true);
-                        }
-                    });
+                    runOnUiThread(() -> binding.tvResendOTP.setEnabled(true));
                 }
             }
         }, 0, 1000);
@@ -142,23 +121,19 @@ public class VerifyOTP extends AppCompatActivity {
         setInProgress(true);
 
         mAuth.signInWithCredential(phoneAuthCredential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        setInProgress(false);
-                        if (task.isSuccessful()) {
-                            Intent intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            saveUser(getIntent().getStringExtra("phone"));
-                            sp.edit()
-                                    .putString("phone", phoneNumber)
-                                    .putBoolean("profileCompleted", false)
-                                    .apply();
-                            startActivity(intent);
-                        } else {
-                            AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
-                            AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", Objects.requireNonNull(task.getException()).getMessage());
-                        }
+                .addOnCompleteListener(task -> {
+                    setInProgress(false);
+                    if (task.isSuccessful()) {
+                        Intent intent = new Intent(getApplicationContext(), CompleteProfileActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        sp.edit()
+                                .putString("phone", phoneNumber)
+                                .putBoolean("profileCompleted", false)
+                                .apply();
+                        startActivity(intent);
+                    } else {
+                        AndroidUtils.showToast(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage());
+                        AndroidUtils.showAlertDialog(VerifyOTP.this, "Error", Objects.requireNonNull(task.getException()).getMessage());
                     }
                 })
         ;

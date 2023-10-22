@@ -1,31 +1,24 @@
 package com.bit.bharatplus.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.bharatplus.R;
-import com.bit.bharatplus.activities.ButtonClickShopActivity;
 import com.bit.bharatplus.models.JobModel;
-import com.bit.bharatplus.utils.AndroidUtils;
-import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.JobViewHolder> {
     Context context;
-    private List<JobModel> jobList = new ArrayList<>();
+    private List<JobModel> jobList;
 
     public JobsAdapter(List<JobModel> jobList) {
         this.jobList = jobList;
@@ -45,13 +38,13 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.JobViewHolder>
 
         holder.jobTitle.setText(job.getJobTitle());
         holder.jobDesc.setText(job.getJobDescription());
-        holder.jobTime.setText(job.getJobTimeStamp().toString());
+        holder.jobTime.setText(job.getJobTimeStamp());
         holder.postedBy.setText(job.getJobPostedBy());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone = job.getJobPostedBy().toString();
+                String phone = job.getJobPostedBy();
                 dialPhone(phone);
             }
         });

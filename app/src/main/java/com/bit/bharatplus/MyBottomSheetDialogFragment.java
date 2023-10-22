@@ -30,51 +30,32 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         TextView item4 = view.findViewById(R.id.nav_item4);
         TextView item5 = view.findViewById(R.id.nav_item5);
 
-        item1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
-                intent.putExtra("name", "jobs");
-                startActivity(intent);
-            }
+        item1.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
+            intent.putExtra("name", "jobs");
+            startActivity(intent);
         });
 
-        item2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
-                intent.putExtra("name", "workers");
-                startActivity(intent);
-            }
+        item2.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
+            intent.putExtra("name", "workers");
+            startActivity(intent);
         });
 
-        item3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().startService(new Intent(requireContext(), LocationService.class));
-            }
-        });
+        item3.setOnClickListener(v -> requireActivity().startService(new Intent(requireContext(), LocationService.class)));
 
-        item4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(requireContext(), JobPostActivity.class));
-            }
-        });
+        item4.setOnClickListener(v -> startActivity(new Intent(requireContext(), JobPostActivity.class)));
 
-        item5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        item5.setOnClickListener(v -> {
 
-                ShopFragment currentFragment = new ShopFragment();
+            ShopFragment currentFragment = new ShopFragment();
 
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragContainer, currentFragment)
-                        .addToBackStack(null)
-                        .commit();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragContainer, currentFragment)
+                    .addToBackStack(null)
+                    .commit();
 
-            }
         });
 
         return view;

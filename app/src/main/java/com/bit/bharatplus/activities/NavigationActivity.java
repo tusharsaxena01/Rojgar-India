@@ -40,8 +40,6 @@ public class NavigationActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         sp = getSharedPreferences("data", 0);
-        String phoneNumber = sp.getString("phone", "9876543210");
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(new Intent(this, LocationService.class));
         }else{

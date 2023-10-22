@@ -13,7 +13,7 @@
         android:id="@+id/jobTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Job Title"
+        android:text="@string/job_title"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/jobDesc"
@@ -34,7 +34,7 @@
         android:id="@+id/jobDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Job Description"
+        android:text="@string/job_description"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@id/postedBy"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
         android:id="@+id/postedBy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="@string/username"
         app:layout_constraintTop_toBottomOf="@id/jobDesc"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

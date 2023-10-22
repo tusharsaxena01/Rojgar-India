@@ -7,9 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bit.bharatplus.LocationService;
 import com.bit.bharatplus.MyBottomSheetDialogFragment;
-import com.bit.bharatplus.R;
 import com.bit.bharatplus.activities.ButtonClickHomeActivity;
 import com.bit.bharatplus.adapters.ProfessionAdapter;
 import com.bit.bharatplus.databinding.FragmentHomeBinding;
@@ -31,7 +27,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.SocketTimeoutException;
 import java.util.List;
 
 import okhttp3.Call;
@@ -41,9 +36,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
-    private View topNavigationDrawer;
-    private Animation slideDownAnimation, slideUpAnimation;
-    private boolean isDrawerOpen = false;
     FragmentHomeBinding binding;
     FirebaseAuth mAuth;
     ProfessionAdapter professionAdapter;
@@ -60,39 +52,25 @@ public class HomeFragment extends Fragment {
         binding.recyclerProfession.setAdapter(professionAdapter);
         fetchProfession();
 
-        binding.findJobs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
-                intent.putExtra("name", "jobs");
-                startActivity(intent);
-            }
+        binding.findJobs.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
+            intent.putExtra("name", "jobs");
+            startActivity(intent);
         });
-        binding.findWorkers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
-                intent.putExtra("name", "workers");
-                startActivity(intent);
-            }
+        binding.findWorkers.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ButtonClickHomeActivity.class);
+            intent.putExtra("name", "workers");
+            startActivity(intent);
         });
-        binding.updateLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    requireActivity().startForegroundService(new Intent(requireContext(), LocationService.class));
-                }else{
-                    requireActivity().startService(new Intent(requireContext(), LocationService.class));
-                }
+        binding.updateLocation.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requireActivity().startForegroundService(new Intent(requireContext(), LocationService.class));
+            }else{
+                requireActivity().startService(new Intent(requireContext(), LocationService.class));
             }
         });
 
-        binding.btnOpenDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialog();
-            }
-        });
+        binding.btnOpenDrawer.setOnClickListener(v -> showBottomSheetDialog());
 
         return binding.getRoot();
     }

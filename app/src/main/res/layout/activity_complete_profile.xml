@@ -20,7 +20,7 @@
         android:id="@+id/tvHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Complete Your Profile"
+        android:text="@string/complete_your_profile"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -81,7 +81,7 @@
                 android:layout_alignStart="@id/etName"
                 android:layout_marginTop="10dp"
                 android:padding="2dp"
-                android:text="Name"
+                android:text="@string/name"
                 android:textStyle="bold" />
 
             <EditText
@@ -92,7 +92,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/background_white_edit_text"
-                android:hint="Name"
+                android:hint="@string/name"
                 android:maxLength="255"
                 android:maxLines="1"
                 android:inputType="textCapWords"
@@ -107,7 +107,7 @@
                 android:layout_alignStart="@id/etProfession"
                 android:layout_marginTop="10dp"
                 android:padding="2dp"
-                android:text="Profession"
+                android:text="@string/profession"
                 android:textStyle="bold" />
 
             <Spinner
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/labelProfession"
                 android:layout_marginHorizontal="10dp"
-                android:hint="Profession"
+                android:hint="@string/profession"
                 android:inputType="textCapWords"
                 />
 
@@ -128,7 +128,7 @@
                 android:layout_alignStart="@id/etGender"
                 android:layout_marginTop="10dp"
                 android:padding="2dp"
-                android:text="Gender"
+                android:text="@string/gender"
                 android:textStyle="bold" />
 
             <Spinner
@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/labelGender"
                 android:layout_marginHorizontal="10dp"
-                android:hint="Gender"
+                android:hint="@string/gender"
                 android:inputType="textCapWords"
                 />
 
@@ -149,7 +149,7 @@
                 android:layout_alignStart="@id/etPhoneNumber"
                 android:layout_marginTop="10dp"
                 android:padding="2dp"
-                android:text="Phone Number"
+                android:text="@string/phone_number"
                 android:textStyle="bold" />
 
             <EditText
@@ -161,8 +161,8 @@
                 android:background="@drawable/background_white_edit_text"
                 android:enabled="false"
                 android:allowClickWhenDisabled="true"
-                android:hint="Phone Number"
-                android:inputType="number"
+                android:hint="@string/phone_number"
+                android:inputType="phone|number"
                 android:padding="10dp" />
 
         </RelativeLayout>
@@ -174,7 +174,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="28dp"
         android:background="@drawable/rounded_background_success"
-        android:text="Submit"
+        android:text="@string/submit"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:enabled="false"

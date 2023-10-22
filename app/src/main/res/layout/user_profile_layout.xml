@@ -20,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_toStartOf="@id/ivProfile"
         android:layout_marginStart="10dp"
         android:layout_weight="2">
 
@@ -39,7 +38,7 @@
             android:id="@+id/tvPhoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+919876543210"
+            android:text="@string/dummy_phone"
             android:textAlignment="center"
             />
 

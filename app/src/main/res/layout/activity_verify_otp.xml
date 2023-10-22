@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="OTP Verification"
+                android:text="@string/otp_verification"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Please Enter the OTP sent to"
+                android:text="@string/please_enter_the_otp_sent_to"
                 android:textSize="14sp"
                 />
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="+91xxxxxxxxxx"
+                tools:text="+91xxxxxxxxxx"
                 android:textSize="14sp"
                 />
 
@@ -158,14 +158,14 @@
                     android:id="@+id/tvResendOTPMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Resend OTP in 60 secs "
+                    android:text="@string/resend_otp_in_60_secs"
                     />
                 <TextView
                     android:id="@+id/tvResendOTP"
                     android:layout_marginStart="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Resend OTP"
+                    android:text="@string/resend_otp"
                     android:textColor="@color/link"
                     android:textStyle="bold"
                     android:enabled="false"
@@ -183,7 +183,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Verify OTP"
+                    android:text="@string/verify_otp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold"

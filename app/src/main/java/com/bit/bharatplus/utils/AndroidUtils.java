@@ -8,16 +8,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-
-import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.bit.bharatplus.R;
 import com.bit.bharatplus.activities.CompleteProfileActivity;
 import com.bit.bharatplus.databinding.DialogAlertBinding;
 
@@ -64,7 +58,6 @@ public class AndroidUtils {
                 binding.btnOK.setVisibility(View.GONE);
                 break;
             case "Error":
-                index = 1;
                 break;
             case "Warning":
                 index = 2;
@@ -80,12 +73,7 @@ public class AndroidUtils {
         AlertDialog dialog = builder.create();
 
         // close the dialog when ok is pressed
-        binding.btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        binding.btnOK.setOnClickListener(v -> dialog.dismiss());
 
 
 //        binding.clMain.setBackgroundResource(transparent);

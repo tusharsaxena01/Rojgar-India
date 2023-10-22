@@ -12,6 +12,7 @@ import android.view.View;
 import com.bit.bharatplus.adapters.JobsAdapter;
 import com.bit.bharatplus.databinding.ActivityButtonClickHomeBinding;
 import com.bit.bharatplus.models.JobModel;
+import com.bit.bharatplus.utils.AndroidUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class ButtonClickHomeActivity extends AppCompatActivity {
 
-    ActivityButtonClickHomeBinding binding;
+    private ActivityButtonClickHomeBinding binding;
     JobsAdapter jobsAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,7 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
             setupForProfessions(oldIntent.getStringExtra("Profession name"));
         }
 
-        binding.dummy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialPhone(binding.postedBy.getText().toString());
-            }
-        });
+        binding.dummy.setOnClickListener(v -> dialPhone(binding.postedBy.getText().toString()));
 
     }
 
@@ -76,7 +72,7 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
     private void setupForWorkers() {
         binding.tvHeader.setText("Workers");
 
-        List<JobModel> jobsList = new ArrayList<JobModel>();
+        List<JobModel> jobsList = new ArrayList<>();
         jobsAdapter = new JobsAdapter(jobsList);
         binding.recycler.setAdapter(jobsAdapter);
 
@@ -107,9 +103,7 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
         });
 
         if(jobsList.isEmpty()){
-//            binding.tvMessage.setText("No Openings available currently");
-//            binding.tvMessage.setVisibility(View.VISIBLE);
-//            binding.recycler.setVisibility(View.GONE);
+            AndroidUtils.showAlertDialog(ButtonClickHomeActivity.this,"Warning", "Unable to connect to server");
         }else{
             binding.dummy.setVisibility(View.GONE);
             binding.tvMessage.setVisibility(View.GONE);
@@ -124,7 +118,7 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
 
     private void setupForJobs() {
         binding.tvHeader.setText("Jobs");
-        List<JobModel> jobsList = new ArrayList<JobModel>();
+        List<JobModel> jobsList = new ArrayList<>();
         jobsAdapter = new JobsAdapter(jobsList);
         binding.recycler.setAdapter(jobsAdapter);
 
@@ -155,9 +149,7 @@ public class ButtonClickHomeActivity extends AppCompatActivity {
         });
 
         if(jobsList.isEmpty()){
-//            binding.tvMessage.setText("No Openings available currently");
-//            binding.tvMessage.setVisibility(View.VISIBLE);
-//            binding.recycler.setVisibility(View.GONE);
+            AndroidUtils.showAlertDialog(ButtonClickHomeActivity.this, "Warning", "Unable to connect to server");
         }else{
             binding.dummy.setVisibility(View.GONE);
             binding.tvMessage.setVisibility(View.GONE);
