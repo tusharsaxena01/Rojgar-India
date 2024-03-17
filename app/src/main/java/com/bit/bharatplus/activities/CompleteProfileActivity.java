@@ -387,14 +387,15 @@ public class CompleteProfileActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     private void requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            // Permission already granted, start location updates
-            startLocationUpdates();
-            startService(new Intent(this, LocationService.class));
-
-        }
+//        todo: removing location services
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+//        } else {
+//            // Permission already granted, start location updates
+//            startLocationUpdates();
+//            startService(new Intent(this, LocationService.class));
+//
+//        }
     }
 
     @Override
